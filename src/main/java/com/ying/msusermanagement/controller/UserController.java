@@ -14,8 +14,8 @@ public class UserController {
   @GetMapping("/{userId}")
   @Permissions({"p1", "p2", "p3"})
   public String getUser(
-      @RequestHeader("Authorization") String jwtToken,
-      @PathVariable("userId") String userId) {
+      @PathVariable("userId") String userId,
+      @RequestHeader("Authorization") String jwtToken) {
     return "userId: " + userId;
   }
 }
