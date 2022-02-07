@@ -20,6 +20,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UserCredential {
 
+  public static final String STATUS_ENABLED = "enabled";
+  public static final String STATUS_DISABLED = "disabled";
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -29,6 +32,9 @@ public class UserCredential {
 
   @Column(name="credential_type")
   private String credentialType;
+
+  @Column(name="credential_id")
+  private String credentialId;
 
   @Column(name="password")
   private String password;

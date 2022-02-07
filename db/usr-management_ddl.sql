@@ -16,6 +16,7 @@ create table user_credential
     id int AUTO_INCREMENT,
     user_id binary(16) not null,
     credential_type varchar(16) not null,
+    credential_id varchar(64) not null,
     password varchar(256) not null,
     salt varchar(128) not null,
     status varchar(16) not null,

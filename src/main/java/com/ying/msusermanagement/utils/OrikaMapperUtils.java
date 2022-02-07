@@ -1,6 +1,8 @@
 package com.ying.msusermanagement.utils;
 
 import com.google.common.collect.ImmutableList;
+import com.ying.msusermanagement.dto.converter.OrikaLongLocalDateTimeConverter;
+import com.ying.msusermanagement.dto.converter.OrikaStringUUIDConverter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -14,25 +16,16 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 public class OrikaMapperUtils {
 
-  private static final MapperFactory MAPPER_FACTORY = new DefaultMapperFactory.Builder().build();
-  private static final MapperFacade MAPPER_FACADE = MAPPER_FACTORY.getMapperFacade();
-
   private OrikaMapperUtils() {
 
   }
 
   public static <S, D> D map (S source, Class<D> distClass) {
-    if (Objects.isNull(source))
-      return null;
-
-    return MAPPER_FACADE.map(source, distClass);
+    return map(source, distClass, List.of(new OrikaLongLocalDateTimeConverter(), new OrikaStringUUIDConverter()));
   }
 
-  public static <S, D> List<D> map (Collection<S> collection, Class<D> toClass) {
-    if (Objects.isNull(collection))
-      return null;
-
-    return MAPPER_FACADE.mapAsList(collection, toClass);
+  public static <S, D> List<D> map (Collection<S> collection, Class<D> distClass) {
+    return map(collection, distClass, List.of(new OrikaLongLocalDateTimeConverter(), new OrikaStringUUIDConverter()));
   }
 
   public static <S, D> D map (S source, Class<D> distClass, List<Converter> converters) {

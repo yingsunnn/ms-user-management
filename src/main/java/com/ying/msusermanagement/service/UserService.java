@@ -1,12 +1,11 @@
 package com.ying.msusermanagement.service;
 
-import com.google.common.collect.ImmutableMap;
 import com.ying.msusermanagement.dto.UserCredentialDto;
 import com.ying.msusermanagement.dto.UserDto;
-import com.ying.msusermanagement.dto.converter.OrikaLongLocalDateTimeConverter;
-import com.ying.msusermanagement.dto.converter.OrikaStringUUIDConverter;
 import com.ying.msusermanagement.entity.User;
 import com.ying.msusermanagement.entity.UserCredential;
+import com.ying.msusermanagement.exception.DataNotExistException;
+import com.ying.msusermanagement.exception.DuplicatedDataException;
 import com.ying.msusermanagement.repository.UserCredentialRepository;
 import com.ying.msusermanagement.repository.UserRepository;
 import com.ying.msusermanagement.utils.OrikaMapperUtils;
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import ma.glasnost.orika.Converter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,36 +23,60 @@ public class UserService {
   private UserRepository userRepository;
   private UserCredentialRepository userCredentialRepository;
 
-  private static final List<Converter> ORIKA_CONVERTERS = List.of(
-      new OrikaLongLocalDateTimeConverter(),
-      new OrikaStringUUIDConverter());
-
   @Transactional
-  public UserDto createUser (UserDto userDto) {
+  public UserDto createUser(UserDto userDto) {
 
     final LocalDateTime now = LocalDateTime.now();
     userDto.setCreatedAt(now);
     userDto.setUpdatedAt(now);
 
+    // Store user profile and credentials
+    User createdUser = this.userRepository.save(OrikaMapperUtils.map(userDto, User.class));
+    List<UserCredentialDto> createdUserCredentialDtos = this.createUserCredentials(createdUser.getId().toString(), userDto.getUserCredentials());
 
+    //
+    UserDto createdUserDto = OrikaMapperUtils.map(createdUser, UserDto.class);
+    createdUserDto.setUserCredentials(createdUserCredentialDtos);
 
-    User user = OrikaMapperUtils.map(userDto, User.class, ORIKA_CONVERTERS);
-    List<UserCredential> userCredentials = OrikaMapperUtils.map(userDto.getUserCredentials(), UserCredential.class, ORIKA_CONVERTERS);
+    return createdUserDto;
+  }
 
-    User createdUser = this.userRepository.save(user);
+  private List<UserCredentialDto> createUserCredentials(
+      String userId,
+      List<UserCredentialDto> credentialDtos
+  ) {
+    if (CollectionUtils.isEmpty(credentialDtos)) {
+      throw new DataNotExistException("Must provide user credential.");
+    }
 
-    userDto.getUserCredentials().forEach(
-        userCredentialDto ->
-            userCredentialDto.setCreatedAt(now)
-                .setUpdatedAt(now)
-                .setSalt("123")
-                .setUserId(user.getId())
-                .setStatus("Enabled")
+    final LocalDateTime now = LocalDateTime.now();
+
+    credentialDtos.forEach(
+        userCredentialDto -> {
+          // Check if the credential has already existed
+          List<UserCredential> existCredentials = this.userCredentialRepository.findByCredentialTypeAndCredentialId(
+              userCredentialDto.getCredentialType(),
+              userCredentialDto.getCredentialId()
+          );
+
+          if (CollectionUtils.isNotEmpty(existCredentials)) {
+            throw new DuplicatedDataException(
+                "User credential has already existed. Credential type: " + userCredentialDto.getCredentialType()
+                    + " Credential id: " + userCredentialDto.getCredentialId());
+          }
+
+          // fulfill user credentials
+          userCredentialDto.setCreatedAt(now)
+              .setUpdatedAt(now)
+              .setSalt("123")
+              .setUserId(userId)
+              .setStatus(UserCredential.STATUS_ENABLED);
+        }
     );
-    this.userCredentialRepository.saveAll(
-        OrikaMapperUtils.map(userDto.getUserCredentials(), UserCredential.class, ORIKA_CONVERTERS));
 
-    return OrikaMapperUtils.map(createdUser, UserDto.class, ORIKA_CONVERTERS);
+    List<UserCredential> storedUserCredentials = this.userCredentialRepository.saveAll(OrikaMapperUtils.map(credentialDtos, UserCredential.class));
+
+    return OrikaMapperUtils.map(storedUserCredentials, UserCredentialDto.class);
   }
 
 }

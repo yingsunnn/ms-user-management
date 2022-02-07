@@ -16,8 +16,9 @@ import lombok.experimental.Accessors;
 public class UserCredentialDto {
 
   private Long id;
-  private UUID userId;
+  private String userId;
   private String credentialType;
+  private String credentialId;
   private String password;
   private String salt;
   private String status;
