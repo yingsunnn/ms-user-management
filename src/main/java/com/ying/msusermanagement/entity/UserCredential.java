@@ -1,49 +1,47 @@
 package com.ying.msusermanagement.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-@Entity(name="user")
+@Entity(name="user_credential")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class User {
+public class UserCredential {
 
   @Id
-  @GeneratedValue
-  private UUID id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-  @Column(name="full_name")
-  private String fullName;
+  @Column(name="user_id")
+  private UUID userId;
 
-  @Column(name="email")
-  private String email;
+  @Column(name="credential_type")
+  private String credentialType;
 
-  @Column(name="gender")
-  private String gender;
+  @Column(name="password")
+  private String password;
 
-  @Column(name="birthday")
-  private Long birthday;
+  @Column(name="salt")
+  private String salt;
+
+  @Column(name="status")
+  private String status;
 
   @Column(name="created_at")
   private Long createdAt;
 
   @Column(name="updated_at")
   private Long updatedAt;
-
-  @Column(name="created_by")
-  private UUID createdBy;
 }

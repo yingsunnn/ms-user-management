@@ -2,7 +2,6 @@ package com.ying.msusermanagement.controller;
 
 import com.ying.msusermanagement.Permissions;
 import com.ying.msusermanagement.dto.UserDto;
-import com.ying.msusermanagement.entity.User;
 import com.ying.msusermanagement.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

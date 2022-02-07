@@ -1,7 +1,7 @@
 package com.ying.msusermanagement.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,23 +13,14 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserCredentialDto {
 
-  private String id;
-
-  private String fullName;
-
-  private String email;
-
-  private String gender;
-
-  private LocalDateTime birthday;
-
+  private Long id;
+  private UUID userId;
+  private String credentialType;
+  private String password;
+  private String salt;
+  private String status;
   private LocalDateTime createdAt;
-
   private LocalDateTime updatedAt;
-
-  private String createdBy;
-
-  private List<UserCredentialDto> userCredentials;
 }
