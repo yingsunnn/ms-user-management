@@ -67,9 +67,8 @@ public class UserService {
                     + " Credential id: " + userCredentialDto.getCredentialId());
           }
 
-          String salt = pbkdf2Utils.generateSalt();
-
           // fulfill user credentials
+          String salt = pbkdf2Utils.generateSalt();
           userCredentialDto.setCreatedAt(now)
               .setUpdatedAt(now)
               .setSalt(salt)
@@ -84,4 +83,12 @@ public class UserService {
     return OrikaMapperUtils.map(storedUserCredentials, UserCredentialDto.class);
   }
 
+  public int checkCredentialExists (UserCredentialDto userCredentialDto) {
+    List<UserCredential> existCredentials = this.userCredentialRepository.findByCredentialTypeAndCredentialId(
+        userCredentialDto.getCredentialType(),
+        userCredentialDto.getCredentialId()
+    );
+
+    return existCredentials.size();
+  }
 }

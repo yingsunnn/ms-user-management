@@ -10,3 +10,4 @@
 * auth0 JWT
 * Lombok
 * Customized method annotation
+* Swagger (http://localhost:8080/swagger-ui/index.html)
