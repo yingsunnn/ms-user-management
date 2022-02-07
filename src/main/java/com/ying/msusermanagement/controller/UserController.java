@@ -113,6 +113,7 @@ public class UserController {
 
   @GetMapping(value = "/credentials", produces = "application/json")
   public String getDuplicatedUserCredentials (
+<<<<<<< HEAD
       @Parameter(
           examples = {
             @ExampleObject(
@@ -126,6 +127,9 @@ public class UserController {
                   name = "ying@email.com",
                   value= "ying@email.com"
               )})
+=======
+      @RequestParam("credentialType") String credentialType,
+>>>>>>> f767e6bf0a47a5abde4f5ff948b1aea0a406b958
       @RequestParam("credentialId") String credentialId) {
 
     int count = this.userService.checkCredentialExists(
