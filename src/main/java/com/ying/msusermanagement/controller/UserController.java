@@ -4,7 +4,6 @@ import com.ying.msusermanagement.Permissions;
 import com.ying.msusermanagement.dto.UserCredentialDto;
 import com.ying.msusermanagement.dto.UserDto;
 import com.ying.msusermanagement.service.UserService;
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -113,7 +111,6 @@ public class UserController {
 
   @GetMapping(value = "/credentials", produces = "application/json")
   public String getDuplicatedUserCredentials (
-<<<<<<< HEAD
       @Parameter(
           examples = {
             @ExampleObject(
@@ -127,9 +124,6 @@ public class UserController {
                   name = "ying@email.com",
                   value= "ying@email.com"
               )})
-=======
-      @RequestParam("credentialType") String credentialType,
->>>>>>> f767e6bf0a47a5abde4f5ff948b1aea0a406b958
       @RequestParam("credentialId") String credentialId) {
 
     int count = this.userService.checkCredentialExists(
