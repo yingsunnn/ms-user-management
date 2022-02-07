@@ -1,4 +1,4 @@
-# ms-user-management
+# MS User Management
 
 ## Tech Stack
 
