@@ -14,21 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 public class ExceptionsHandler {
 
-  @ExceptionHandler(Exception.class)
-  public ErrorResponse handleDefaultException(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      Exception e
-  ) {
-    response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-    log.error(e.getMessage(), e);
-
-    return ErrorResponse.builder()
-        .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
-        .errorMessage(e.getMessage())
-        .build();
-  }
-
   @ExceptionHandler(DuplicatedDataException.class)
   public ErrorResponse handleDuplicatedDataException(
       HttpServletRequest request,
@@ -45,6 +30,30 @@ public class ExceptionsHandler {
       DataNotExistException e
   ) {
     return this.handleException(HttpStatus.BAD_REQUEST.value(), request, response, e);
+  }
+
+  @ExceptionHandler(UserManagementException.class)
+  public ErrorResponse handleUserManagementException (
+      HttpServletRequest request,
+      HttpServletResponse response,
+      DataNotExistException e
+  ) {
+    return this.handleException(e.getHttpStatus(), request, response, e);
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ErrorResponse handleDefaultException(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      Exception e
+  ) {
+    response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    log.error(e.getMessage(), e);
+
+    return ErrorResponse.builder()
+        .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+        .errorMessage(e.getMessage())
+        .build();
   }
 
   private ErrorResponse handleException(

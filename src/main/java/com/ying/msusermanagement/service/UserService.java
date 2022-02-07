@@ -9,6 +9,7 @@ import com.ying.msusermanagement.exception.DuplicatedDataException;
 import com.ying.msusermanagement.repository.UserCredentialRepository;
 import com.ying.msusermanagement.repository.UserRepository;
 import com.ying.msusermanagement.utils.OrikaMapperUtils;
+import com.ying.msusermanagement.utils.PBKDF2Utils;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -22,6 +23,7 @@ public class UserService {
 
   private UserRepository userRepository;
   private UserCredentialRepository userCredentialRepository;
+  private PBKDF2Utils pbkdf2Utils;
 
   @Transactional
   public UserDto createUser(UserDto userDto) {
@@ -65,10 +67,13 @@ public class UserService {
                     + " Credential id: " + userCredentialDto.getCredentialId());
           }
 
+          String salt = pbkdf2Utils.generateSalt();
+
           // fulfill user credentials
           userCredentialDto.setCreatedAt(now)
               .setUpdatedAt(now)
-              .setSalt("123")
+              .setSalt(salt)
+              .setPassword(pbkdf2Utils.encryptPassword(userCredentialDto.getPassword(), salt))
               .setUserId(userId)
               .setStatus(UserCredential.STATUS_ENABLED);
         }
