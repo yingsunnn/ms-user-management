@@ -109,6 +109,68 @@ public class UserController {
     return this.userService.createUser(user);
   }
 
+  @Operation(tags = "User Credential",
+      summary = "Login",
+      description = "",
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = UserDto.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value =
+                              "{\n"
+                                  + "    \"id\": \"e826e938-5362-4779-9707-bd63db20d9b4\",\n"
+                                  + "    \"fullName\": \"Ying Sun\",\n"
+                                  + "    \"email\": \"ying@email.com\",\n"
+                                  + "    \"gender\": \"male\",\n"
+                                  + "    \"birthday\": \"2016-01-25T00:00:00\",\n"
+                                  + "    \"createdAt\": \"2022-02-07T02:05:27.228\",\n"
+                                  + "    \"updatedAt\": \"2022-02-07T02:05:27.228\",\n"
+                                  + "    \"userCredentials\": [\n"
+                                  + "        {\n"
+                                  + "            \"id\": 2,\n"
+                                  + "            \"userId\": \"e826e938-5362-4779-9707-bd63db20d9b4\",\n"
+                                  + "            \"credentialType\": \"email\",\n"
+                                  + "            \"credentialId\": \"ying@email.com\",\n"
+                                  + "            \"status\": \"enabled\",\n"
+                                  + "            \"createdAt\": \"2022-02-07T02:05:27.245\",\n"
+                                  + "            \"updatedAt\": \"2022-02-07T02:05:27.245\"\n"
+                                  + "        }\n"
+                                  + "    ],\n"
+                                  + "    \"accessToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb20ueWluZy51c2VyLW1hbmFnZW1lbnQiLCJVU0VSX0lEIjoiRTgyNkU5MzgtNTM2Mi00Nzc5LTk3MDctQkQ2M0RCMjBEOUI0IiwiQ1JFREVOVElBTF9JRCI6InlpbmdAZW1haWwuY29tIiwiUk9MRV9JRFMiOiIiLCJDUkVERU5USUFMX1RZUEUiOiJlbWFpbCIsImV4cCI6MTY0NDM4Njk1Mn0.lefJMRxZVK5pRvUBr3g2EBs3J0CyAG992q52DXntnnI\"\n"
+                                  + "}")
+                  }
+              )
+          )
+      })
+  @PostMapping("/authentication/{userId}")
+  public UserDto authenticateUser (
+      @PathVariable("userId") String userId,
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "",
+          required = true,
+          content = @Content(
+              schema = @Schema(implementation = UserCredentialDto.class),
+              mediaType = "application/json",
+              examples = {
+                  @ExampleObject(
+                      name = "Response properties",
+                      value =
+                          "{\n"
+                          + "    \"credentialType\": \"email\",\n"
+                          + "    \"credentialId\": \"ying@email.com\",\n"
+                          + "    \"password\": \"123456\"\n"
+                          + "}")
+              }))
+      @RequestBody UserCredentialDto userCredentialDto) {
+    return this.userService.authenticateUser(userId, userCredentialDto);
+  }
+
   @GetMapping(value = "/credentials", produces = "application/json")
   public String getDuplicatedUserCredentials (
       @Parameter(
@@ -126,17 +188,13 @@ public class UserController {
               )})
       @RequestParam("credentialId") String credentialId) {
 
-    int count = this.userService.checkCredentialExists(
+    boolean credentialExist = this.userService.checkCredentialExists(
         UserCredentialDto.builder()
             .credentialType(credentialType)
             .credentialId(credentialId)
             .build()
     );
 
-    if (count > 0) {
-      return "{ \"credentialExist\": true }";
-    } else {
-      return "{ \"credentialExist\": false }";
-    }
+    return "{ \"credentialExist\": " + credentialExist + " }";
   }
 }

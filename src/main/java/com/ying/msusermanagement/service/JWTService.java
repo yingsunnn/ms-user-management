@@ -8,24 +8,39 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JWTService {
 
-  private long DEFAULT_EXPIRE_IN_SECONDS = 60;
+  public static final String CLAIM_USER_ID = "USER_ID";
+  public static final String CLAIM_CREDENTIAL_TYPE = "CREDENTIAL_TYPE";
+  public static final String CLAIM_CREDENTIAL_ID = "CREDENTIAL_ID";
+  public static final String CLAIM_ROLE_IDS = "ROLE_IDS";
+
+  @Value("${jwt.expireInHour}")
+  private long expireInHour = 24;
+
+  @Value("${jwt.issuer}")
+  private String issuer;
+
+  @Value("${jwt.acceptExpiresInSecond}")
+  private long acceptExpiresInSecond;
 
   private String secret = "abcd1234";
   private Algorithm algorithm = Algorithm.HMAC256(secret);
 
-  public String generateJWTToken(String username, String role) {
+  public String generateJWTToken(String userId, String credentialType, String credentialId, String roleIds) {
 
-    Instant expiresAt = Instant.now().plus(DEFAULT_EXPIRE_IN_SECONDS * 1000, ChronoUnit.MILLIS);
+    Instant expiresAt = Instant.now().plus(expireInHour, ChronoUnit.HOURS);
 
     String jwtToken = JWT.create()
-        .withIssuer("Simple Solution")
-        .withClaim("username", username)
-        .withClaim("role", role)
+        .withIssuer(issuer)
+        .withClaim(CLAIM_USER_ID, userId)
+        .withClaim(CLAIM_CREDENTIAL_TYPE, credentialType)
+        .withClaim(CLAIM_CREDENTIAL_ID, credentialId)
+        .withClaim(CLAIM_ROLE_IDS, roleIds)
         .withExpiresAt(Date.from(expiresAt))
         .sign(algorithm);
 
@@ -35,8 +50,8 @@ public class JWTService {
   public boolean verifyJWTToken(String token) {
     try {
       JWTVerifier verifier = JWT.require(algorithm)
-          .withIssuer("Simple Solution")
-          .acceptExpiresAt(DEFAULT_EXPIRE_IN_SECONDS)
+          .withIssuer(issuer)
+          .acceptExpiresAt(acceptExpiresInSecond)
           .build();
 
       verifier.verify(token);

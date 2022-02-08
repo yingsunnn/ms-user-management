@@ -8,3 +8,8 @@ spring:
       max-active: 500
       max-idle: 20
       initial-size: 20
+jwt:
+  secret: j9*L^_ghfADYmhPV=RZg+YD%gG=a#VHG
+  expireInHour: 24
+  issuer: com.ying.user-management
+  acceptExpiresInSecond: 10

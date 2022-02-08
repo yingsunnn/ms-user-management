@@ -32,6 +32,23 @@ public class ExceptionsHandler {
     return this.handleException(HttpStatus.BAD_REQUEST.value(), request, response, e);
   }
 
+  @ExceptionHandler(AuthenticationException.class)
+  public ErrorResponse handleAuthenticationException (
+      HttpServletRequest request,
+      HttpServletResponse response,
+      DataNotExistException e
+  ) {
+    return this.handleException(HttpStatus.UNAUTHORIZED.value(), request, response, e);
+  }
+
+
+  /**
+   * Root exception
+   * @param request
+   * @param response
+   * @param e
+   * @return
+   */
   @ExceptionHandler(UserManagementException.class)
   public ErrorResponse handleUserManagementException (
       HttpServletRequest request,
@@ -41,6 +58,13 @@ public class ExceptionsHandler {
     return this.handleException(e.getHttpStatus(), request, response, e);
   }
 
+  /**
+   * Default exception
+   * @param request
+   * @param response
+   * @param e
+   * @return
+   */
   @ExceptionHandler(Exception.class)
   public ErrorResponse handleDefaultException(
       HttpServletRequest request,
