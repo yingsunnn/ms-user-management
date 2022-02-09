@@ -47,7 +47,6 @@ public class PermissionsAspect {
 
     // Set user argument
     args[this.getAuthenticatedUserParaIndex(joinPoint)] = user;
-    log.debug("authenticated user: " + user);
     return joinPoint.proceed(args);
   }
 

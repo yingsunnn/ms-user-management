@@ -124,8 +124,7 @@ public class UserService {
     String jwtToken = this.jwtService.generateJWTToken(
         userId,
         userCredential.getCredentialType(),
-        userCredential.getCredentialId(),
-        "");
+        userCredential.getCredentialId());
 
     UserCredentialDto returnUserCredentialDto = OrikaMapperUtils.map(userCredential, UserCredentialDto.class);
     returnUserCredentialDto.setPassword(null);

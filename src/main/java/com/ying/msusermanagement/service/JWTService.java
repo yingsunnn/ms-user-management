@@ -18,7 +18,6 @@ public class JWTService {
   public static final String CLAIM_USER_ID = "USER_ID";
   public static final String CLAIM_CREDENTIAL_TYPE = "CREDENTIAL_TYPE";
   public static final String CLAIM_CREDENTIAL_ID = "CREDENTIAL_ID";
-  public static final String CLAIM_ROLE_IDS = "ROLE_IDS";
 
   @Value("${jwt.expireInHour}")
   private long expireInHour = 24;
@@ -34,7 +33,7 @@ public class JWTService {
 
   private Algorithm algorithm;
 
-  public String generateJWTToken(String userId, String credentialType, String credentialId, String roleIds) {
+  public String generateJWTToken(String userId, String credentialType, String credentialId) {
 
     Instant expiresAt = Instant.now().plus(expireInHour, ChronoUnit.HOURS);
 
@@ -43,7 +42,6 @@ public class JWTService {
         .withClaim(CLAIM_USER_ID, userId)
         .withClaim(CLAIM_CREDENTIAL_TYPE, credentialType)
         .withClaim(CLAIM_CREDENTIAL_ID, credentialId)
-        .withClaim(CLAIM_ROLE_IDS, roleIds)
         .withExpiresAt(Date.from(expiresAt))
         .sign(this.getAlgorithm());
 
