@@ -1,8 +1,9 @@
 package com.ying.msusermanagement.controller;
 
-import com.ying.msusermanagement.Permissions;
 import com.ying.msusermanagement.dto.UserCredentialDto;
 import com.ying.msusermanagement.dto.UserDto;
+import com.ying.msusermanagement.permission.AuthenticatedUser;
+import com.ying.msusermanagement.permission.Permissions;
 import com.ying.msusermanagement.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,10 +30,11 @@ public class UserController {
   private UserService userService;
 
   @GetMapping("/{userId}")
-//  @Permissions({"p1", "p2", "p3"})
+  @Permissions({"p1", "p2", "p3", "permission_1"})
   public String getUser(
-      @PathVariable("userId") String userId) {
-    return "userId: " + userId;
+      @PathVariable("userId") String userId,
+      @AuthenticatedUser UserDto userDto) {
+    return "userId: " + userId + " userDto: " + userDto;
   }
 
   @Operation(tags = "User",

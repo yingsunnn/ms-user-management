@@ -29,7 +29,7 @@ create table user_credential
 create table permission
 (
     id int auto_increment,
-    permission_name varchar(64) not null,
+    name varchar(64) not null,
     description varchar(512) null,
     constraint permission_pk
         primary key (id)

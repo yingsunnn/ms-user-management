@@ -41,6 +41,15 @@ public class ExceptionsHandler {
     return this.handleException(HttpStatus.UNAUTHORIZED.value(), request, response, e);
   }
 
+  @ExceptionHandler(PermissionDeniedException.class)
+  public ErrorResponse handlePermissionDeniedException (
+      HttpServletRequest request,
+      HttpServletResponse response,
+      DataNotExistException e
+  ) {
+    return this.handleException(HttpStatus.FORBIDDEN.value(), request, response, e);
+  }
+
 
   /**
    * Root exception

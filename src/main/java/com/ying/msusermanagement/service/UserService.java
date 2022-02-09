@@ -137,4 +137,9 @@ public class UserService {
 
     return returnUserDto;
   }
+
+  public UserDto getUser (String userId) {
+
+    return UserDto.builder().id(userId).build();
+  }
 }
