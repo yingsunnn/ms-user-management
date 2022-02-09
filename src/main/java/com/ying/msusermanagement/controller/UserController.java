@@ -29,14 +29,12 @@ public class UserController {
   private UserService userService;
 
   @GetMapping("/{userId}")
-  @Permissions({"p1", "p2", "p3"})
+//  @Permissions({"p1", "p2", "p3"})
   public String getUser(
-      @PathVariable("userId") String userId,
-      @RequestHeader("Authorization") String jwtToken) {
+      @PathVariable("userId") String userId) {
     return "userId: " + userId;
   }
 
-  @PostMapping("")
   @Operation(tags = "User",
       summary = "Create new user with credentials",
       description = "",
@@ -79,6 +77,7 @@ public class UserController {
               )
           )
       })
+  @PostMapping("")
   public UserDto createUser (
       @io.swagger.v3.oas.annotations.parameters.RequestBody(
           description = "",

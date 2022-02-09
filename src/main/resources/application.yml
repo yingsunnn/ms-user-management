@@ -8,6 +8,13 @@ spring:
       max-active: 500
       max-idle: 20
       initial-size: 20
+logging:
+  level:
+    root: "info"
+    web: "debug"
+    sql: "error"
+    com:
+      ying: DEBUG
 jwt:
   secret: j9*L^_ghfADYmhPV=RZg+YD%gG=a#VHG
   expireInHour: 24

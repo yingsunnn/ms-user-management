@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,10 @@ public class JWTService {
   @Value("${jwt.acceptExpiresInSecond}")
   private long acceptExpiresInSecond;
 
-  private String secret = "abcd1234";
-  private Algorithm algorithm = Algorithm.HMAC256(secret);
+  @Value("${jwt.secret}")
+  private String secret;
+
+  private Algorithm algorithm;
 
   public String generateJWTToken(String userId, String credentialType, String credentialId, String roleIds) {
 
@@ -42,14 +45,14 @@ public class JWTService {
         .withClaim(CLAIM_CREDENTIAL_ID, credentialId)
         .withClaim(CLAIM_ROLE_IDS, roleIds)
         .withExpiresAt(Date.from(expiresAt))
-        .sign(algorithm);
+        .sign(this.getAlgorithm());
 
     return jwtToken;
   }
 
   public boolean verifyJWTToken(String token) {
     try {
-      JWTVerifier verifier = JWT.require(algorithm)
+      JWTVerifier verifier = JWT.require(this.getAlgorithm())
           .withIssuer(issuer)
           .acceptExpiresAt(acceptExpiresInSecond)
           .build();
@@ -66,4 +69,10 @@ public class JWTService {
     return decodedJWT.getClaims().get(claimKey).toString();
   }
 
+  private Algorithm getAlgorithm () {
+    if (Objects.isNull(algorithm))
+      algorithm = Algorithm.HMAC256(secret);
+
+    return algorithm;
+  }
 }
