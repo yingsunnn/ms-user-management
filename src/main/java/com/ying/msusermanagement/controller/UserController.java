@@ -35,6 +35,78 @@ public class UserController {
   private UserService userService;
   private RoleService roleService;
 
+  @Operation(tags = "User",
+      summary = "Get user",
+      description = "",
+      security = { @SecurityRequirement(name = "bearer-key") },
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = UserDto.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value =
+                              "{\n"
+                                  + "    \"id\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
+                                  + "    \"fullName\": \"Ying Sun\",\n"
+                                  + "    \"email\": \"ying@email.com\",\n"
+                                  + "    \"gender\": \"male\",\n"
+                                  + "    \"birthday\": \"2016-01-25T00:00:00\",\n"
+                                  + "    \"createdAt\": \"2022-02-10T01:23:08.253\",\n"
+                                  + "    \"updatedAt\": \"2022-02-10T01:23:08.253\",\n"
+                                  + "    \"userCredentials\": [\n"
+                                  + "        {\n"
+                                  + "            \"id\": 4,\n"
+                                  + "            \"userId\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
+                                  + "            \"credentialType\": \"email\",\n"
+                                  + "            \"credentialId\": \"ying@email.com\",\n"
+                                  + "            \"status\": \"enabled\",\n"
+                                  + "            \"createdAt\": \"2022-02-10T01:23:08.269\",\n"
+                                  + "            \"updatedAt\": \"2022-02-10T01:23:08.269\"\n"
+                                  + "        }\n"
+                                  + "    ],\n"
+                                  + "    \"roles\": [\n"
+                                  + "        {\n"
+                                  + "            \"id\": 1,\n"
+                                  + "            \"roleName\": \"Super Admin\",\n"
+                                  + "            \"status\": \"enabled\",\n"
+                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"permissions\": [\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 1,\n"
+                                  + "                    \"name\": \"USERS_GET_USER\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 2,\n"
+                                  + "                    \"name\": \"USERS_GET_ME\"\n"
+                                  + "                }\n"
+                                  + "            ]\n"
+                                  + "        },\n"
+                                  + "        {\n"
+                                  + "            \"id\": 2,\n"
+                                  + "            \"roleName\": \"End User\",\n"
+                                  + "            \"status\": \"enabled\",\n"
+                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"createdBy\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
+                                  + "            \"permissions\": [\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 2,\n"
+                                  + "                    \"name\": \"USERS_GET_ME\"\n"
+                                  + "                }\n"
+                                  + "            ]\n"
+                                  + "        }\n"
+                                  + "    ]\n"
+                                  + "}")
+                  }
+              )
+          )
+      })
   @GetMapping("/{userId}")
   @Permissions({"USERS_GET_USER"})
   public UserDto getUser(
@@ -44,6 +116,78 @@ public class UserController {
     return this.userService.getUser(userId);
   }
 
+  @Operation(tags = "User",
+      summary = "Get user me",
+      description = "",
+      security = { @SecurityRequirement(name = "bearer-key") },
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = UserDto.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value =
+                              "{\n"
+                                  + "    \"id\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
+                                  + "    \"fullName\": \"Ying Sun\",\n"
+                                  + "    \"email\": \"ying@email.com\",\n"
+                                  + "    \"gender\": \"male\",\n"
+                                  + "    \"birthday\": \"2016-01-25T00:00:00\",\n"
+                                  + "    \"createdAt\": \"2022-02-10T01:23:08.253\",\n"
+                                  + "    \"updatedAt\": \"2022-02-10T01:23:08.253\",\n"
+                                  + "    \"userCredentials\": [\n"
+                                  + "        {\n"
+                                  + "            \"id\": 4,\n"
+                                  + "            \"userId\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
+                                  + "            \"credentialType\": \"email\",\n"
+                                  + "            \"credentialId\": \"ying@email.com\",\n"
+                                  + "            \"status\": \"enabled\",\n"
+                                  + "            \"createdAt\": \"2022-02-10T01:23:08.269\",\n"
+                                  + "            \"updatedAt\": \"2022-02-10T01:23:08.269\"\n"
+                                  + "        }\n"
+                                  + "    ],\n"
+                                  + "    \"roles\": [\n"
+                                  + "        {\n"
+                                  + "            \"id\": 1,\n"
+                                  + "            \"roleName\": \"Super Admin\",\n"
+                                  + "            \"status\": \"enabled\",\n"
+                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"permissions\": [\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 1,\n"
+                                  + "                    \"name\": \"USERS_GET_USER\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 2,\n"
+                                  + "                    \"name\": \"USERS_GET_ME\"\n"
+                                  + "                }\n"
+                                  + "            ]\n"
+                                  + "        },\n"
+                                  + "        {\n"
+                                  + "            \"id\": 2,\n"
+                                  + "            \"roleName\": \"End User\",\n"
+                                  + "            \"status\": \"enabled\",\n"
+                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"createdBy\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
+                                  + "            \"permissions\": [\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 2,\n"
+                                  + "                    \"name\": \"USERS_GET_ME\"\n"
+                                  + "                }\n"
+                                  + "            ]\n"
+                                  + "        }\n"
+                                  + "    ]\n"
+                                  + "}")
+                  }
+              )
+          )
+      })
   @GetMapping("/me")
   @Permissions({"USERS_GET_ME"})
   public UserDto getUserMe(
@@ -138,25 +282,58 @@ public class UserController {
                           name = "Response properties",
                           value =
                               "{\n"
-                                  + "    \"id\": \"e826e938-5362-4779-9707-bd63db20d9b4\",\n"
+                                  + "    \"id\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
                                   + "    \"fullName\": \"Ying Sun\",\n"
                                   + "    \"email\": \"ying@email.com\",\n"
                                   + "    \"gender\": \"male\",\n"
                                   + "    \"birthday\": \"2016-01-25T00:00:00\",\n"
-                                  + "    \"createdAt\": \"2022-02-07T02:05:27.228\",\n"
-                                  + "    \"updatedAt\": \"2022-02-07T02:05:27.228\",\n"
+                                  + "    \"createdAt\": \"2022-02-10T01:23:08.253\",\n"
+                                  + "    \"updatedAt\": \"2022-02-10T01:23:08.253\",\n"
                                   + "    \"userCredentials\": [\n"
                                   + "        {\n"
-                                  + "            \"id\": 2,\n"
-                                  + "            \"userId\": \"e826e938-5362-4779-9707-bd63db20d9b4\",\n"
+                                  + "            \"id\": 4,\n"
+                                  + "            \"userId\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
                                   + "            \"credentialType\": \"email\",\n"
                                   + "            \"credentialId\": \"ying@email.com\",\n"
                                   + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-07T02:05:27.245\",\n"
-                                  + "            \"updatedAt\": \"2022-02-07T02:05:27.245\"\n"
+                                  + "            \"createdAt\": \"2022-02-10T01:23:08.269\",\n"
+                                  + "            \"updatedAt\": \"2022-02-10T01:23:08.269\"\n"
                                   + "        }\n"
                                   + "    ],\n"
-                                  + "    \"accessToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb20ueWluZy51c2VyLW1hbmFnZW1lbnQiLCJVU0VSX0lEIjoiRTgyNkU5MzgtNTM2Mi00Nzc5LTk3MDctQkQ2M0RCMjBEOUI0IiwiQ1JFREVOVElBTF9JRCI6InlpbmdAZW1haWwuY29tIiwiUk9MRV9JRFMiOiIiLCJDUkVERU5USUFMX1RZUEUiOiJlbWFpbCIsImV4cCI6MTY0NDM4Njk1Mn0.lefJMRxZVK5pRvUBr3g2EBs3J0CyAG992q52DXntnnI\"\n"
+                                  + "    \"roles\": [\n"
+                                  + "        {\n"
+                                  + "            \"id\": 1,\n"
+                                  + "            \"roleName\": \"Super Admin\",\n"
+                                  + "            \"status\": \"enabled\",\n"
+                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"permissions\": [\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 1,\n"
+                                  + "                    \"name\": \"USERS_GET_USER\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 2,\n"
+                                  + "                    \"name\": \"USERS_GET_ME\"\n"
+                                  + "                }\n"
+                                  + "            ]\n"
+                                  + "        },\n"
+                                  + "        {\n"
+                                  + "            \"id\": 2,\n"
+                                  + "            \"roleName\": \"End User\",\n"
+                                  + "            \"status\": \"enabled\",\n"
+                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"createdBy\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
+                                  + "            \"permissions\": [\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 2,\n"
+                                  + "                    \"name\": \"USERS_GET_ME\"\n"
+                                  + "                }\n"
+                                  + "            ]\n"
+                                  + "        }\n"
+                                  + "    ],\n"
+                                  + "    \"accessToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb20ueWluZy51c2VyLW1hbmFnZW1lbnQiLCJVU0VSX0lEIjoiNGRjM2U0NmUtNWRmZi00YjRkLTg5YjgtNjY4YTVlMTFkN2YyIiwiQ1JFREVOVElBTF9JRCI6InlpbmdAZW1haWwuY29tIiwiQ1JFREVOVElBTF9UWVBFIjoiZW1haWwiLCJleHAiOjE2NDQ1NjEyNDV9.mc8vxHRL35YIeNzZOdK7hEyy1gNwVLpreDDbPSacQKM\"\n"
                                   + "}")
                   }
               )
@@ -185,6 +362,26 @@ public class UserController {
     return this.userService.authenticateUser(userId, userCredentialDto);
   }
 
+  @Operation(tags = "User Credential",
+      summary = "Check if user credential exist",
+      description = "",
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value =
+                              "{\n"
+                                  + "    \"credentialExist\": true\n"
+                                  + "}")
+                  }
+              )
+          )
+      })
   @GetMapping(value = "/credentials", produces = "application/json")
   public String getDuplicatedUserCredentials (
       @Parameter(

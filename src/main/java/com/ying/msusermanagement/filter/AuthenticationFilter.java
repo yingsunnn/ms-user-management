@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.ying.msusermanagement.exception.AuthenticationException;
 import com.ying.msusermanagement.service.JWTService;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class AuthenticationFilter implements Filter {
 
   private JWTService jwtService;
 
-  private static List<Endpoint> excludedEndpoints = ImmutableList.of(
+  private static List<Endpoint> excludedEndpoints = List.of(
       // login
       Endpoint.builder()
           .method("POST")
@@ -82,10 +83,17 @@ public class AuthenticationFilter implements Filter {
       return;
     }
 
+    if (this.isSwaggerLink(currentEndpoint)) {
+      // continue
+      filterChain.doFilter(servletRequest, servletResponse);
+      return;
+    }
+
     // Verify access token
     String token = Optional.ofNullable(httpServletRequest.getHeader("Authorization"))
         .map(t -> StringUtils.removeStartIgnoreCase(t, "Bearer "))
-        .orElseThrow(() -> new AuthenticationException("Must provide access token.")
+        .orElseThrow(() -> new AuthenticationException("Must provide access token. "
+            + currentEndpoint)
 //        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "111Must provide access token.")
     );
 
@@ -100,6 +108,29 @@ public class AuthenticationFilter implements Filter {
   @Override
   public void destroy() {
     Filter.super.destroy();
+  }
+
+  private boolean isSwaggerLink (Endpoint endpoint) {
+
+    List<String> swaggerUriKeywords = ImmutableList.of(
+        "api-docs",
+        "swagger-config",
+        "swagger-ui"
+    );
+
+    if (!"GET".equals(endpoint.getMethod())) {
+      return false;
+    }
+
+    String[] uriArr = endpoint.getUri().split("/");
+
+    if (uriArr.length <= 2) {
+      return false;
+    }
+
+    return Arrays.stream(uriArr).anyMatch(
+        uri -> swaggerUriKeywords.contains(uri)
+    );
   }
 
   @Data
