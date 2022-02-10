@@ -69,4 +69,14 @@ public class RoleService {
         PermissionDto.builder().id(2l).name("permission_2").build()
     );
   }
+
+  public void storeUserRoles (String userId, List<RoleDto> roles) {
+    if (CollectionUtils.isEmpty(roles)) {
+      return;
+    }
+
+    roles.forEach(
+        role -> this.roleRepository.insertUserRole(userId, role.getId())
+    );
+  }
 }

@@ -37,17 +37,24 @@ public class UserService {
     userDto.setCreatedAt(now);
     userDto.setUpdatedAt(now);
 
-    // Store user profile and credentials
+    // Store user profile
     User createdUser = this.userRepository.save(OrikaMapperUtils.map(userDto, User.class));
+
+    // Store credentials
     List<UserCredentialDto> createdUserCredentialDtos = this.createUserCredentials(createdUser.getId().toString(),
         userDto.getUserCredentials());
     createdUserCredentialDtos.forEach(
         userCredentialDto -> userCredentialDto.setPassword(null).setSalt(null)
     );
 
-    //
+    // Store user role
+    this.roleService.storeUserRoles(createdUser.getId().toString(), userDto.getRoles());
+
+    // mapping
     UserDto createdUserDto = OrikaMapperUtils.map(createdUser, UserDto.class);
-    createdUserDto.setUserCredentials(createdUserCredentialDtos);
+    createdUserDto
+        .setUserCredentials(createdUserCredentialDtos)
+        .setRoles(userDto.getRoles());
 
     return createdUserDto;
   }
@@ -110,9 +117,9 @@ public class UserService {
     ).stream()
         .findFirst()
         .orElseThrow(
-        () -> new DataNotExistException("User credential doesn't exist. Credential type: " +
-            userCredentialDto.getCredentialType() + " Credential id: " + userCredentialDto.getCredentialId())
-    );
+            () -> new DataNotExistException("User credential doesn't exist. Credential type: " +
+                userCredentialDto.getCredentialType() + " Credential id: " + userCredentialDto.getCredentialId())
+        );
 
     UserDto userDto = this.getUserProfile(userId);
 

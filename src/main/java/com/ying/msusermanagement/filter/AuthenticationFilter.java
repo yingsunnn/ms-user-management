@@ -34,7 +34,7 @@ public class AuthenticationFilter implements Filter {
 
   private JWTService jwtService;
 
-  private static List<Endpoint> excludedEndpoints = List.of(
+  private static final List<Endpoint> EXCLUDED_ENDPOINTS = ImmutableList.of(
       // login
       Endpoint.builder()
           .method("POST")
@@ -74,7 +74,7 @@ public class AuthenticationFilter implements Filter {
         .method(httpServletRequest.getMethod())
         .uri(httpServletRequest.getRequestURI())
         .build();
-    if (true == excludedEndpoints.stream().anyMatch(
+    if (true == EXCLUDED_ENDPOINTS.stream().anyMatch(
         endpoint -> endpoint.equals(currentEndpoint))) {
       log.debug("Endpoint " + currentEndpoint + " doesn't need to verify the access token");
 
