@@ -24,4 +24,8 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
       nativeQuery = true)
   void insertUserRole(String userId, Long roleId);
 
+  @Modifying
+  @Query(value = "delete from user_management.user_role where user_id = UUID_TO_BIN(:userId)",
+     nativeQuery = true)
+  void delUserRoles (String userId);
 }

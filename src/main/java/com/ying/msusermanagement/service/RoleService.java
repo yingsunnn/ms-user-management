@@ -10,8 +10,8 @@ import com.ying.msusermanagement.repository.RoleRepository;
 import com.ying.msusermanagement.utils.OrikaMapperUtils;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,7 +25,7 @@ public class RoleService {
   private final RoleRepository roleRepository;
   private final PermissionRepository permissionRepository;
 
-  public List<RoleDto> getUserRoles (String userId) {
+  public List<RoleDto> getUserRoles(String userId) {
     List<Role> roles = this.roleRepository.retrieveUserRoles(userId);
 
     if (CollectionUtils.isEmpty(roles)) {
@@ -36,16 +36,16 @@ public class RoleService {
 
     roleDtos.forEach(
         roleDto ->
-          roleDto.setPermissions(OrikaMapperUtils.map(
-              this.permissionRepository.retrievePermission(roleDto.getId()),
-              PermissionDto.class
-          ))
+            roleDto.setPermissions(OrikaMapperUtils.map(
+                this.permissionRepository.retrievePermission(roleDto.getId()),
+                PermissionDto.class
+            ))
     );
 
     return roleDtos;
   }
 
-  public Set<PermissionDto> mapRolePermissionToPermission (List<RoleDto> roleDtos) {
+  public Set<PermissionDto> mapRolePermissionToPermission(List<RoleDto> roleDtos) {
     if (CollectionUtils.isEmpty(roleDtos)) {
       return ImmutableSet.of();
     }
@@ -70,7 +70,10 @@ public class RoleService {
     );
   }
 
-  public void storeUserRoles (String userId, List<RoleDto> roles) {
+  public void storeUserRoles(
+      String userId,
+      List<RoleDto> roles
+  ) {
     if (CollectionUtils.isEmpty(roles)) {
       return;
     }
@@ -78,5 +81,14 @@ public class RoleService {
     roles.forEach(
         role -> this.roleRepository.insertUserRole(userId, role.getId())
     );
+  }
+
+  @Transactional
+  public void updateUserRoles(
+      String userId,
+      List<RoleDto> roles
+  ) {
+    this.roleRepository.delUserRoles(userId);
+    this.storeUserRoles(userId, roles);
   }
 }
