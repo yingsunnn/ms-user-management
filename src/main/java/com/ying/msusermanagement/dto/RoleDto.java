@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,27 +17,15 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(Include.NON_NULL)
-public class UserDto {
+public class RoleDto {
 
-  private String id;
-
-  private String fullName;
-
-  private String email;
-
-  private String gender;
-
-  private LocalDateTime birthday;
-
+  private Long id;
+  private String roleName;
+  private String description;
+  private String status;
   private LocalDateTime createdAt;
-
   private LocalDateTime updatedAt;
+  private UUID createdBy;
 
-  private String createdBy;
-
-  private List<UserCredentialDto> userCredentials;
-
-  private List<RoleDto> roles;
-
-  private String accessToken;
+  private List<PermissionDto> permissions;
 }

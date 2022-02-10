@@ -5,7 +5,7 @@ create table user (
     gender varchar(16) null,
     birthday bigint(16) null,
     created_at bigint(16) not null,
-    created_by bigint(16) null,
+    created_by binary(16) null,
     updated_at bigint(16) not null,
     constraint user_pk
         primary key (id)
@@ -43,7 +43,7 @@ create table role
     status varchar(16) not null,
     created_at bigint(16) not null,
     updated_at bigint(16) not null,
-    created_by int null,
+    created_by binary(16) null,
     constraint role_pk
         primary key (id)
 );
@@ -60,7 +60,7 @@ create table role_permission
 create table user_role
 (
     id int auto_increment,
-    user_id int not null,
+    user_id BINARY(16) not null,
     role_id int not null,
     constraint user_role_pk
         primary key (id)

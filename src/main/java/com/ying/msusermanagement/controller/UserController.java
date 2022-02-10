@@ -1,9 +1,11 @@
 package com.ying.msusermanagement.controller;
 
+import com.ying.msusermanagement.dto.RoleDto;
 import com.ying.msusermanagement.dto.UserCredentialDto;
 import com.ying.msusermanagement.dto.UserDto;
 import com.ying.msusermanagement.permission.AuthenticatedUser;
 import com.ying.msusermanagement.permission.Permissions;
+import com.ying.msusermanagement.service.RoleService;
 import com.ying.msusermanagement.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,7 +14,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,18 +27,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 @AllArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
   private UserService userService;
+  private RoleService roleService;
 
   @GetMapping("/{userId}")
-  @Permissions({"p1", "p2", "p3", "permission_1"})
-  public String getUser(
+  @Permissions({"USERS_GET_USER"})
+  public UserDto getUser(
       @PathVariable("userId") String userId,
       @AuthenticatedUser UserDto userDto) {
-    return "userId: " + userId + " userDto: " + userDto;
+    log.debug("Get user " + userId);
+    return this.userService.getUser(userId);
+  }
+
+  @GetMapping("/me")
+  @Permissions({"USERS_GET_ME"})
+  public UserDto getUserMe(
+      @AuthenticatedUser UserDto userDto) {
+    return this.userService.getUser(userDto.getId());
   }
 
   @Operation(tags = "User",
@@ -104,8 +118,7 @@ public class UserController {
                           + "    ]\n"
                           + "}")
               }))
-      @RequestBody UserDto user,
-      @RequestHeader("Authorization") String jwtToken
+      @RequestBody UserDto user
   ) {
     return this.userService.createUser(user);
   }
@@ -197,5 +210,62 @@ public class UserController {
     );
 
     return "{ \"credentialExist\": " + credentialExist + " }";
+  }
+
+  @Operation(tags = "User",
+      summary = "Get user roles",
+      description = "",
+      security = { @SecurityRequirement(name = "bearer-key") },
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = List.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value =
+                              "[\n"
+                                  + "    {\n"
+                                  + "        \"id\": 1,\n"
+                                  + "        \"roleName\": \"Super Admin\",\n"
+                                  + "        \"status\": \"enabled\",\n"
+                                  + "        \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "        \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "        \"permissions\": [\n"
+                                  + "            {\n"
+                                  + "                \"id\": 1,\n"
+                                  + "                \"name\": \"USERS_GET_USER\"\n"
+                                  + "            },\n"
+                                  + "            {\n"
+                                  + "                \"id\": 2,\n"
+                                  + "                \"name\": \"USERS_GET_ME\"\n"
+                                  + "            }\n"
+                                  + "        ]\n"
+                                  + "    },\n"
+                                  + "    {\n"
+                                  + "        \"id\": 2,\n"
+                                  + "        \"roleName\": \"End User\",\n"
+                                  + "        \"status\": \"enabled\",\n"
+                                  + "        \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "        \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "        \"createdBy\": \"e826e938-5362-4779-9707-bd63db20d9b4\",\n"
+                                  + "        \"permissions\": [\n"
+                                  + "            {\n"
+                                  + "                \"id\": 2,\n"
+                                  + "                \"name\": \"USERS_GET_ME\"\n"
+                                  + "            }\n"
+                                  + "        ]\n"
+                                  + "    }\n"
+                                  + "]")
+                  }
+              )
+          )
+      })
+  @GetMapping("/{userId}/roles")
+  public List<RoleDto> getUserRoles (@PathVariable("userId") String userId) {
+    return this.roleService.getUserRoles(userId);
   }
 }

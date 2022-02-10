@@ -41,16 +41,16 @@ public class PermissionsAspect {
 
     String userAccessToken = this.getUserToken();
     String userId = this.jwtService.getClaimFromToken(userAccessToken, JWTService.CLAIM_USER_ID);
-    UserDto user = this.userService.getUser(userId);
+    UserDto user = this.userService.getUserForPermissionVerification(userId);
 
-    this.verifyPermissions(joinPoint, userId);
+    this.verifyPermissions(joinPoint, user);
 
     // Set user argument
     args[this.getAuthenticatedUserParaIndex(joinPoint)] = user;
     return joinPoint.proceed(args);
   }
 
-  private void verifyPermissions(ProceedingJoinPoint joinPoint, String userId) {
+  private void verifyPermissions(ProceedingJoinPoint joinPoint, UserDto user) {
     // get method permissions
     Set<String> methodPermissions = this.getMethodPermissions(joinPoint);
 
@@ -59,14 +59,14 @@ public class PermissionsAspect {
     }
 
     // get user permissions
-    Set<PermissionDto> userPermissions = this.roleService.getUserPermissions(userId);
+    Set<PermissionDto> userPermissions = this.roleService.mapRolePermissionToPermission(user.getRoles());
 
     // verify permissions
     if (!methodPermissions.stream().anyMatch(
         methodPermission -> userPermissions.stream().anyMatch(
             userPermission -> methodPermission.equals(userPermission.getName())))) {
       throw new PermissionDeniedException(
-          "User (" + userId + ") doesn't have any permissions which matches " + methodPermissions);
+          "User (" + user.getId() + ") doesn't have any permissions which matches " + methodPermissions);
     }
   }
 

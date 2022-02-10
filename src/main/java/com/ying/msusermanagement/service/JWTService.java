@@ -64,7 +64,7 @@ public class JWTService {
 
   public String getClaimFromToken(String token, String claimKey) {
     DecodedJWT decodedJWT = JWT.decode(token);
-    return decodedJWT.getClaims().get(claimKey).toString();
+    return decodedJWT.getClaims().get(claimKey).asString();
   }
 
   private Algorithm getAlgorithm () {

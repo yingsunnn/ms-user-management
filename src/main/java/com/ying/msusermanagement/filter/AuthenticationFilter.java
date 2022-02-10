@@ -44,6 +44,12 @@ public class AuthenticationFilter implements Filter {
       Endpoint.builder()
           .method("POST")
           .uri("/users")
+          .build(),
+
+      // User Check if user credential exist
+      Endpoint.builder()
+          .method("GET")
+          .uri("/users/credentials")
           .build()
   );
 
@@ -132,6 +138,10 @@ public class AuthenticationFilter implements Filter {
 
       String[] uriAArr = uriA.split("/");
       String[] uriBArr = uriB.split("/");
+
+      if (uriAArr.length != uriBArr.length) {
+        return false;
+      }
 
       for (int i = 0; i < uriAArr.length; i++) {
         if (uriAArr[i].indexOf("}") >= 0 || uriBArr[i].indexOf("}") >= 0) {

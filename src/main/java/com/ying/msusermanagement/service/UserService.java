@@ -24,10 +24,11 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserService {
 
-  private UserRepository userRepository;
-  private UserCredentialRepository userCredentialRepository;
-  private PBKDF2Utils pbkdf2Utils;
-  private JWTService jwtService;
+  private final UserRepository userRepository;
+  private final UserCredentialRepository userCredentialRepository;
+  private final PBKDF2Utils pbkdf2Utils;
+  private final JWTService jwtService;
+  private final RoleService roleService;
 
   @Transactional
   public UserDto createUser(UserDto userDto) {
@@ -64,14 +65,14 @@ public class UserService {
     credentialDtos.forEach(
         userCredentialDto -> {
           // Check if the credential has already existed
-          this.userCredentialRepository.findByCredentialTypeAndCredentialId(
+          if (CollectionUtils.isNotEmpty(this.userCredentialRepository.findByCredentialTypeAndCredentialId(
               userCredentialDto.getCredentialType(),
               userCredentialDto.getCredentialId()
-          ).orElseThrow(
-              () -> new DuplicatedDataException(
-                  "User credential has already existed. Credential type: " + userCredentialDto.getCredentialType()
-                      + " Credential id: " + userCredentialDto.getCredentialId())
-          );
+          ))) {
+            throw new DuplicatedDataException(
+                "User credential has already existed. Credential type: " + userCredentialDto.getCredentialType()
+                    + " Credential id: " + userCredentialDto.getCredentialId());
+          }
 
           // fulfill user credentials
           String salt = pbkdf2Utils.generateSalt();
@@ -91,10 +92,10 @@ public class UserService {
   }
 
   public boolean checkCredentialExists(UserCredentialDto userCredentialDto) {
-    return this.userCredentialRepository.findByCredentialTypeAndCredentialId(
+    return CollectionUtils.isNotEmpty(this.userCredentialRepository.findByCredentialTypeAndCredentialId(
         userCredentialDto.getCredentialType(),
         userCredentialDto.getCredentialId()
-    ).isPresent();
+    ));
 
   }
 
@@ -106,12 +107,14 @@ public class UserService {
     UserCredential userCredential = this.userCredentialRepository.findByCredentialTypeAndCredentialId(
         userCredentialDto.getCredentialType(),
         userCredentialDto.getCredentialId()
-    ).orElseThrow(
+    ).stream()
+        .findFirst()
+        .orElseThrow(
         () -> new DataNotExistException("User credential doesn't exist. Credential type: " +
-            userCredentialDto.getCredentialType() + " Credential id: " + userCredentialDto.getCredentialId()));
+            userCredentialDto.getCredentialType() + " Credential id: " + userCredentialDto.getCredentialId())
+    );
 
-    User user = this.userRepository.findById(UUID.fromString(userId)).orElseThrow(
-        () -> new DataNotExistException("User (" + userId + ") profile doesn't exist."));
+    UserDto userDto = this.getUserProfile(userId);
 
     // verify password
     if (false == this.pbkdf2Utils.authenticate(userCredentialDto.getPassword(),
@@ -130,15 +133,44 @@ public class UserService {
     returnUserCredentialDto.setPassword(null);
     returnUserCredentialDto.setSalt(null);
 
-    UserDto returnUserDto = OrikaMapperUtils.map(user, UserDto.class);
-    returnUserDto.setAccessToken(jwtToken);
-    returnUserDto.setUserCredentials(ImmutableList.of(returnUserCredentialDto));
+    userDto
+        .setAccessToken(jwtToken)
+        .setUserCredentials(ImmutableList.of(returnUserCredentialDto))
+        .setRoles(this.roleService.getUserRoles(userId));
 
-    return returnUserDto;
+    return userDto;
   }
 
-  public UserDto getUser (String userId) {
+  private List<UserCredentialDto> getUserCredentials(String userId) {
 
-    return UserDto.builder().id(userId).build();
+    List<UserCredentialDto> userCredentialDtos = OrikaMapperUtils.map(
+        this.userCredentialRepository.findByUserId(UUID.fromString(userId)), UserCredentialDto.class);
+
+    if (CollectionUtils.isEmpty(userCredentialDtos)) {
+      throw new DataNotExistException("User credential doesn't exist.");
+    }
+
+    userCredentialDtos.forEach(
+        userCredentialDto -> userCredentialDto.setPassword(null).setSalt(null)
+    );
+
+    return userCredentialDtos;
+  }
+
+  private UserDto getUserProfile(String userId) {
+    return OrikaMapperUtils.map(
+        this.userRepository.findById(UUID.fromString(userId)).orElseThrow(
+            () -> new DataNotExistException("User (" + userId + ") profile doesn't exist.")),
+        UserDto.class);
+  }
+
+  public UserDto getUser(String userId) {
+    return this.getUserProfile(userId)
+        .setUserCredentials(this.getUserCredentials(userId))
+        .setRoles(this.roleService.getUserRoles(userId));
+  }
+
+  public UserDto getUserForPermissionVerification(String userId) {
+    return this.getUserProfile(userId).setRoles(this.roleService.getUserRoles(userId));
   }
 }
