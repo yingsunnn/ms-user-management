@@ -12,8 +12,11 @@ import com.ying.msusermanagement.repository.UserCredentialRepository;
 import com.ying.msusermanagement.repository.UserRepository;
 import com.ying.msusermanagement.utils.OrikaMapperUtils;
 import com.ying.msusermanagement.utils.PBKDF2Utils;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -165,10 +168,12 @@ public class UserService {
   }
 
   private UserDto getUserProfile(String userId) {
-    return OrikaMapperUtils.map(
-        this.userRepository.findById(UUID.fromString(userId)).orElseThrow(
-            () -> new DataNotExistException("User (" + userId + ") profile doesn't exist.")),
-        UserDto.class);
+    return OrikaMapperUtils.map(this.getUserProfile(UUID.fromString(userId)), UserDto.class);
+  }
+
+  private User getUserProfile (UUID userId) {
+    return this.userRepository.findById(userId).orElseThrow(
+        () -> new DataNotExistException("User (" + userId + ") profile doesn't exist."));
   }
 
   public UserDto getUser(String userId) {
@@ -179,5 +184,28 @@ public class UserService {
 
   public UserDto getUserForPermissionVerification(String userId) {
     return this.getUserProfile(userId).setRoles(this.roleService.getUserRoles(userId));
+  }
+
+  public UserDto updateUserProfile(String userId, UserDto userDto) {
+    User user = this.getUserProfile(UUID.fromString(userId));
+
+    user.setUpdatedAt(Instant.now().toEpochMilli());
+
+    if (Objects.nonNull(userDto.getFullName())) {
+      user.setFullName(userDto.getFullName());
+    }
+    if (Objects.nonNull(userDto.getEmail())) {
+      user.setEmail(userDto.getEmail());
+    }
+    if (Objects.nonNull(userDto.getGender())) {
+      user.setGender(userDto.getGender());
+    }
+    if(Objects.nonNull(userDto.getBirthday())) {
+      user.setBirthday(userDto.getBirthday().toInstant(ZoneOffset.UTC).toEpochMilli());
+    }
+
+    this.userRepository.save(user);
+
+    return OrikaMapperUtils.map(user, UserDto.class);
   }
 }

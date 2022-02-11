@@ -478,10 +478,70 @@ public class UserController {
           )
       })
   @GetMapping("/{userId}/roles")
+  @Permissions({"USERS_GET_USER_ROLES"})
   public List<RoleDto> getUserRoles (@PathVariable("userId") String userId) {
     return this.roleService.getUserRoles(userId);
   }
 
+  @Operation(tags = "User",
+      summary = "Get me roles",
+      description = "",
+      security = { @SecurityRequirement(name = "bearer-key") },
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = List.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value =
+                              "[\n"
+                                  + "    {\n"
+                                  + "        \"id\": 1,\n"
+                                  + "        \"roleName\": \"Super Admin\",\n"
+                                  + "        \"status\": \"enabled\",\n"
+                                  + "        \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "        \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "        \"permissions\": [\n"
+                                  + "            {\n"
+                                  + "                \"id\": 1,\n"
+                                  + "                \"name\": \"USERS_GET_USER\"\n"
+                                  + "            },\n"
+                                  + "            {\n"
+                                  + "                \"id\": 2,\n"
+                                  + "                \"name\": \"USERS_GET_ME\"\n"
+                                  + "            }\n"
+                                  + "        ]\n"
+                                  + "    },\n"
+                                  + "    {\n"
+                                  + "        \"id\": 2,\n"
+                                  + "        \"roleName\": \"End User\",\n"
+                                  + "        \"status\": \"enabled\",\n"
+                                  + "        \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "        \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "        \"createdBy\": \"e826e938-5362-4779-9707-bd63db20d9b4\",\n"
+                                  + "        \"permissions\": [\n"
+                                  + "            {\n"
+                                  + "                \"id\": 2,\n"
+                                  + "                \"name\": \"USERS_GET_ME\"\n"
+                                  + "            }\n"
+                                  + "        ]\n"
+                                  + "    }\n"
+                                  + "]")
+                  }
+              )
+          )
+      })
+  @GetMapping("/me/roles")
+  @Permissions({"USERS_GET_ME_ROLES"})
+  public List<RoleDto> getMeRoles (
+      @AuthenticatedUser UserDto authenticatedUserDto
+  ) {
+    return this.roleService.getUserRoles(authenticatedUserDto.getId());
+  }
 
   @Operation(tags = "User",
       summary = "Update user roles",
@@ -494,6 +554,7 @@ public class UserController {
           )
       })
   @PostMapping("/{userId}/roles")
+  @Permissions({"USERS_UPDATE_USER_ROLES"})
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   public void updateUserRoles (
       @PathVariable("userId") String userId,
@@ -516,5 +577,77 @@ public class UserController {
       @RequestBody List<RoleDto> roles
   ) {
     this.roleService.updateUserRoles(userId, roles);
+  }
+
+  @Operation(tags = "User",
+      summary = "Update user roles",
+      description = "",
+      security = { @SecurityRequirement(name = "bearer-key") },
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "204"
+          )
+      })
+  @PostMapping("/me/roles")
+  @Permissions({"USERS_UPDATE_ME_ROLES"})
+  @ResponseStatus(value = HttpStatus.NO_CONTENT)
+  public void updateMeRoles (
+      @AuthenticatedUser UserDto authenticatedUserDto,
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "",
+          required = true,
+          content = @Content(
+              schema = @Schema(implementation = List.class),
+              mediaType = "application/json",
+              examples = {
+                  @ExampleObject(
+                      name = "Response properties",
+                      value =
+                          "[\n"
+                              + "    {\n"
+                              + "        \"id\": 2\n"
+                              + "    }\n"
+                              + "]")
+              }))
+      @RequestBody List<RoleDto> roles
+  ) {
+    this.roleService.updateUserRoles(authenticatedUserDto.getId(), roles);
+  }
+
+  @Operation(tags = "User",
+      summary = "Update user profile",
+      description = "",
+      security = { @SecurityRequirement(name = "bearer-key") },
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200"
+          )
+      })
+  @PutMapping("/{userId}")
+  @Permissions({"USERS_UPDATE_USER_PROFILE"})
+  public UserDto updateUserProfile (
+      @PathVariable("userId") String userId,
+      @RequestBody UserDto userDto) {
+    return this.userService.updateUserProfile(userId, userDto);
+  }
+
+  @Operation(tags = "User",
+      summary = "Update me profile",
+      description = "",
+      security = { @SecurityRequirement(name = "bearer-key") },
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200"
+          )
+      })
+  @PutMapping("/me")
+  @Permissions({"USERS_UPDATE_ME_PROFILE"})
+  public UserDto updateMeProfile (
+      @AuthenticatedUser UserDto authenticatedUserDto,
+      @RequestBody UserDto userDto) {
+    return this.userService.updateUserProfile(authenticatedUserDto.getId(), userDto);
   }
 }

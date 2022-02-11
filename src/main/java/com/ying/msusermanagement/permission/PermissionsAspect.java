@@ -46,7 +46,10 @@ public class PermissionsAspect {
     this.verifyPermissions(joinPoint, user);
 
     // Set user argument
-    args[this.getAuthenticatedUserParaIndex(joinPoint)] = user;
+    Integer paraIndex = this.getAuthenticatedUserParaIndex(joinPoint);
+    if (Objects.nonNull(paraIndex) && paraIndex >= 0) {
+      args[paraIndex] = user;
+    }
     return joinPoint.proceed(args);
   }
 
