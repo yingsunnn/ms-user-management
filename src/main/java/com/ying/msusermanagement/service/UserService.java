@@ -70,28 +70,9 @@ public class UserService {
       throw new DataNotExistException("Must provide user credential.");
     }
 
-    final LocalDateTime now = LocalDateTime.now();
-
     credentialDtos.forEach(
         userCredentialDto -> {
-          // Check if the credential has already existed
-          if (CollectionUtils.isNotEmpty(this.userCredentialRepository.findByCredentialTypeAndCredentialId(
-              userCredentialDto.getCredentialType(),
-              userCredentialDto.getCredentialId()
-          ))) {
-            throw new DuplicatedDataException(
-                "User credential has already existed. Credential type: " + userCredentialDto.getCredentialType()
-                    + " Credential id: " + userCredentialDto.getCredentialId());
-          }
-
-          // fulfill user credentials
-          String salt = pbkdf2Utils.generateSalt();
-          userCredentialDto.setCreatedAt(now)
-              .setUpdatedAt(now)
-              .setSalt(salt)
-              .setPassword(pbkdf2Utils.encryptPassword(userCredentialDto.getPassword(), salt))
-              .setUserId(userId)
-              .setStatus(UserCredential.STATUS_ENABLED);
+          this.buildUserCredential(userId, userCredentialDto);
         }
     );
 
@@ -101,11 +82,37 @@ public class UserService {
     return OrikaMapperUtils.map(storedUserCredentials, UserCredentialDto.class);
   }
 
-  public boolean checkCredentialExists(UserCredentialDto userCredentialDto) {
-    return CollectionUtils.isNotEmpty(this.userCredentialRepository.findByCredentialTypeAndCredentialId(
+  private void buildUserCredential(
+      String userId,
+      UserCredentialDto userCredentialDto
+  ) {
+    // Check if the credential has already existed
+    this.userCredentialRepository.findByCredentialTypeAndCredentialId(
         userCredentialDto.getCredentialType(),
         userCredentialDto.getCredentialId()
-    ));
+    ).orElseThrow(() ->
+        new DuplicatedDataException(
+            "User credential has already existed. Credential type: " + userCredentialDto.getCredentialType()
+                + " Credential id: " + userCredentialDto.getCredentialId())
+    );
+
+    final LocalDateTime now = LocalDateTime.now();
+
+    // fulfill user credentials
+    String salt = pbkdf2Utils.generateSalt();
+    userCredentialDto.setCreatedAt(now)
+        .setUpdatedAt(now)
+        .setSalt(salt)
+        .setPassword(pbkdf2Utils.encryptPassword(userCredentialDto.getPassword(), salt))
+        .setUserId(userId)
+        .setStatus(UserCredential.STATUS_ENABLED);
+  }
+
+  public boolean checkCredentialExists(UserCredentialDto userCredentialDto) {
+    return this.userCredentialRepository.findByCredentialTypeAndCredentialId(
+        userCredentialDto.getCredentialType(),
+        userCredentialDto.getCredentialId()
+    ).isPresent();
 
   }
 
@@ -117,12 +124,10 @@ public class UserService {
     UserCredential userCredential = this.userCredentialRepository.findByCredentialTypeAndCredentialId(
         userCredentialDto.getCredentialType(),
         userCredentialDto.getCredentialId()
-    ).stream()
-        .findFirst()
-        .orElseThrow(
-            () -> new DataNotExistException("User credential doesn't exist. Credential type: " +
-                userCredentialDto.getCredentialType() + " Credential id: " + userCredentialDto.getCredentialId())
-        );
+    ).orElseThrow(
+        () -> new DataNotExistException("User credential doesn't exist. Credential type: " +
+            userCredentialDto.getCredentialType() + " Credential id: " + userCredentialDto.getCredentialId())
+    );
 
     UserDto userDto = this.getUserProfile(userId);
 
@@ -171,7 +176,7 @@ public class UserService {
     return OrikaMapperUtils.map(this.getUserProfile(UUID.fromString(userId)), UserDto.class);
   }
 
-  private User getUserProfile (UUID userId) {
+  private User getUserProfile(UUID userId) {
     return this.userRepository.findById(userId).orElseThrow(
         () -> new DataNotExistException("User (" + userId + ") profile doesn't exist."));
   }
@@ -186,7 +191,10 @@ public class UserService {
     return this.getUserProfile(userId).setRoles(this.roleService.getUserRoles(userId));
   }
 
-  public UserDto updateUserProfile(String userId, UserDto userDto) {
+  public UserDto updateUserProfile(
+      String userId,
+      UserDto userDto
+  ) {
     User user = this.getUserProfile(UUID.fromString(userId));
 
     user.setUpdatedAt(Instant.now().toEpochMilli());
@@ -200,12 +208,41 @@ public class UserService {
     if (Objects.nonNull(userDto.getGender())) {
       user.setGender(userDto.getGender());
     }
-    if(Objects.nonNull(userDto.getBirthday())) {
+    if (Objects.nonNull(userDto.getBirthday())) {
       user.setBirthday(userDto.getBirthday().toInstant(ZoneOffset.UTC).toEpochMilli());
     }
 
     this.userRepository.save(user);
 
     return OrikaMapperUtils.map(user, UserDto.class);
+  }
+
+  public void changeUserPassword(
+      String userId,
+      UserCredentialDto userCredentialDto
+  ) {
+
+    // Check if the credential has already existed
+    UserCredential userCredential = this.userCredentialRepository.findByCredentialTypeAndCredentialIdAndUserId(
+        userCredentialDto.getCredentialType(),
+        userCredentialDto.getCredentialId(),
+        UUID.fromString(userId)
+    ).orElseThrow(() -> new DuplicatedDataException(
+        "User credential doesn't exist. Credential type: " + userCredentialDto.getCredentialType()
+            + " Credential id: " + userCredentialDto.getCredentialId())
+    );
+
+    // fulfill user credential
+    String salt = pbkdf2Utils.generateSalt();
+    userCredential
+        .setUpdatedAt(Instant.now().toEpochMilli())
+        .setSalt(salt)
+        .setPassword(pbkdf2Utils.encryptPassword(userCredentialDto.getPassword(), salt));
+
+    this.userCredentialRepository.save(userCredential);
+  }
+
+  public List<UserDto> getUsers() {
+    return OrikaMapperUtils.map(this.userRepository.findAll(), UserDto.class);
   }
 }

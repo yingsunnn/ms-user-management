@@ -650,4 +650,61 @@ public class UserController {
       @RequestBody UserDto userDto) {
     return this.userService.updateUserProfile(authenticatedUserDto.getId(), userDto);
   }
+
+  @Operation(tags = "User Credential",
+      summary = "Change me password",
+      description = "",
+      security = { @SecurityRequirement(name = "bearer-key") },
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200"
+          )
+      })
+  @PutMapping("/me/password")
+  @Permissions({"USERS_CHANGE_ME_PASSWORD"})
+  public void changeMePassword (
+      @AuthenticatedUser UserDto authenticatedUserDto,
+      @RequestBody UserCredentialDto userCredentialDto
+  ) {
+    this.userService.changeUserPassword(authenticatedUserDto.getId(), userCredentialDto);
+  }
+
+  @Operation(tags = "User Credential",
+      summary = "Change user password",
+      description = "",
+      security = { @SecurityRequirement(name = "bearer-key") },
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200"
+          )
+      })
+  @PutMapping("/{userId}/password")
+  @Permissions({"USERS_CHANGE_USER_PASSWORD"})
+  public void changeUserPassword(
+      @PathVariable("userId") String userId,
+      @AuthenticatedUser UserDto authenticatedUserDto,
+      @RequestBody UserCredentialDto userCredentialDto
+  ) {
+    this.userService.changeUserPassword(userId, userCredentialDto);
+  }
+
+  @Operation(tags = "User",
+      summary = "Get users",
+      description = "",
+      security = { @SecurityRequirement(name = "bearer-key") },
+      responses = {
+          @ApiResponse(
+              description = "Successful response",
+              responseCode = "200"
+          )
+      })
+  @GetMapping("")
+  @Permissions({"USERS_GET_USERS"})
+  public List<UserDto> getUsers () {
+    return this.userService.getUsers();
+  }
+
+  // reset password
 }
