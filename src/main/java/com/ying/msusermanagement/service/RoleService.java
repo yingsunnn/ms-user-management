@@ -12,6 +12,7 @@ import com.ying.msusermanagement.repository.RoleRepository;
 import com.ying.msusermanagement.utils.OrikaMapperUtils;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -111,7 +112,7 @@ public class RoleService {
       RoleDto roleDto,
       UserDto userDto
   ) {
-    LocalDateTime now = LocalDateTime.now();
+    Date now = new Date();
     roleDto.setStatus("enabled")
     .setCreatedAt(now)
     .setUpdatedAt(now)

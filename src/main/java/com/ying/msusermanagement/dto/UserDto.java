@@ -3,6 +3,7 @@ package com.ying.msusermanagement.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,11 +27,11 @@ public class UserDto {
 
   private String gender;
 
-  private LocalDateTime birthday;
+  private Date birthday;
 
-  private LocalDateTime createdAt;
+  private Date createdAt;
 
-  private LocalDateTime updatedAt;
+  private Date updatedAt;
 
   private String createdBy;
 

@@ -3,6 +3,7 @@ package com.ying.msusermanagement.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -23,8 +24,8 @@ public class RoleDto {
   private String roleName;
   private String description;
   private String status;
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
+  private Date createdAt;
+  private Date updatedAt;
   private UUID createdBy;
 
   private List<PermissionDto> permissions;

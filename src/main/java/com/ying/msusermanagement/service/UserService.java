@@ -14,7 +14,7 @@ import com.ying.msusermanagement.utils.OrikaMapperUtils;
 import com.ying.msusermanagement.utils.PBKDF2Utils;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -36,7 +36,7 @@ public class UserService {
   @Transactional
   public UserDto createUser(UserDto userDto) {
 
-    final LocalDateTime now = LocalDateTime.now();
+    Date now = new Date();
     userDto.setCreatedAt(now);
     userDto.setUpdatedAt(now);
 
@@ -87,16 +87,17 @@ public class UserService {
       UserCredentialDto userCredentialDto
   ) {
     // Check if the credential has already existed
-    this.userCredentialRepository.findByCredentialTypeAndCredentialId(
+    UserCredential userCredential = this.userCredentialRepository.findByCredentialTypeAndCredentialId(
         userCredentialDto.getCredentialType(),
         userCredentialDto.getCredentialId()
-    ).orElseThrow(() ->
-        new DuplicatedDataException(
-            "User credential has already existed. Credential type: " + userCredentialDto.getCredentialType()
-                + " Credential id: " + userCredentialDto.getCredentialId())
-    );
+    ).orElse(null);
+    if (Objects.nonNull(userCredential)) {
+      throw new DuplicatedDataException(
+          "User credential has already existed. Credential type: " + userCredentialDto.getCredentialType()
+              + " Credential id: " + userCredentialDto.getCredentialId());
+    }
 
-    final LocalDateTime now = LocalDateTime.now();
+    Date now = new Date();
 
     // fulfill user credentials
     String salt = pbkdf2Utils.generateSalt();
@@ -209,7 +210,7 @@ public class UserService {
       user.setGender(userDto.getGender());
     }
     if (Objects.nonNull(userDto.getBirthday())) {
-      user.setBirthday(userDto.getBirthday().toInstant(ZoneOffset.UTC).toEpochMilli());
+      user.setBirthday(userDto.getBirthday().getTime());
     }
 
     this.userRepository.save(user);

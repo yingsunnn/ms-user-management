@@ -1,6 +1,7 @@
 package com.ying.msusermanagement.utils;
 
 import com.google.common.collect.ImmutableList;
+import com.ying.msusermanagement.dto.converter.OrikaLongDateConverter;
 import com.ying.msusermanagement.dto.converter.OrikaLongLocalDateTimeConverter;
 import com.ying.msusermanagement.dto.converter.OrikaStringUUIDConverter;
 import java.util.Collection;
@@ -21,11 +22,11 @@ public class OrikaMapperUtils {
   }
 
   public static <S, D> D map (S source, Class<D> distClass) {
-    return map(source, distClass, List.of(new OrikaLongLocalDateTimeConverter(), new OrikaStringUUIDConverter()));
+    return map(source, distClass, List.of(new OrikaLongDateConverter(), new OrikaStringUUIDConverter()));
   }
 
   public static <S, D> List<D> map (Collection<S> collection, Class<D> distClass) {
-    return map(collection, distClass, List.of(new OrikaLongLocalDateTimeConverter(), new OrikaStringUUIDConverter()));
+    return map(collection, distClass, List.of(new OrikaLongDateConverter(), new OrikaStringUUIDConverter()));
   }
 
   public static <S, D> D map (S source, Class<D> distClass, List<Converter> converters) {
