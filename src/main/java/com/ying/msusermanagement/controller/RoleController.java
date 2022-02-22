@@ -6,6 +6,9 @@ import com.ying.msusermanagement.permission.AuthenticatedUser;
 import com.ying.msusermanagement.permission.Permissions;
 import com.ying.msusermanagement.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
@@ -35,7 +38,16 @@ public class RoleController {
       responses = {
           @ApiResponse(
               description = "Successful response",
-              responseCode = "200"
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = List.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value = SwaggerDocConstant.GET_ROLES_RESPONSE_BODY)
+                  }
+              )
           )
       })
   @GetMapping("")
@@ -51,12 +63,32 @@ public class RoleController {
       responses = {
           @ApiResponse(
               description = "Successful response",
-              responseCode = "200"
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = RoleDto.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value = SwaggerDocConstant.CREATE_ROLE_RESPONSE_BODY)
+                  }
+              )
           )
       })
   @PostMapping("")
   @Permissions("ROLES_CREATE_ROLE")
   public RoleDto createRole (
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "",
+          required = true,
+          content = @Content(
+              schema = @Schema(implementation = RoleDto.class),
+              mediaType = "application/json",
+              examples = {
+                  @ExampleObject(
+                      name = "Response properties",
+                      value = SwaggerDocConstant.CREATE_ROLE_REQUEST_BODY)
+              }))
       @RequestBody RoleDto roleDto,
       @AuthenticatedUser UserDto userDto
   ) {
@@ -70,13 +102,33 @@ public class RoleController {
       responses = {
           @ApiResponse(
               description = "Successful response",
-              responseCode = "200"
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = RoleDto.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value = SwaggerDocConstant.UPDATE_ROLE_RESPONSE_BODY)
+                  }
+              )
           )
       })
   @PutMapping("/{roleId}")
   @Permissions("ROLES_UPDATE_ROLE")
   public RoleDto updateRole (
       @PathVariable("roleId") Long roleId,
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "",
+          required = true,
+          content = @Content(
+              schema = @Schema(implementation = RoleDto.class),
+              mediaType = "application/json",
+              examples = {
+                  @ExampleObject(
+                      name = "Response properties",
+                      value = SwaggerDocConstant.UPDATE_ROLE_REQUEST_BODY)
+              }))
       @RequestBody RoleDto roleDto,
       @AuthenticatedUser UserDto userDto
   ) {
@@ -91,7 +143,16 @@ public class RoleController {
       responses = {
           @ApiResponse(
               description = "Successful response",
-              responseCode = "200"
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = RoleDto.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value = SwaggerDocConstant.DELETE_ROLE_RESPONSE_BODY)
+                  }
+              )
           )
       })
   @DeleteMapping("/{roleId}")

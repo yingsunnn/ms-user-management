@@ -14,6 +14,7 @@ import ma.glasnost.orika.Converter;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.springframework.cache.annotation.Cacheable;
 
 public class OrikaMapperUtils {
 

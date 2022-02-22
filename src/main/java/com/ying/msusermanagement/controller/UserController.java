@@ -52,98 +52,7 @@ public class UserController {
                   examples = {
                       @ExampleObject(
                           name = "Response properties",
-                          value =
-                              "{\n"
-                                  + "    \"id\": \"bade0968-d77c-480b-9031-72177aca66e1\",\n"
-                                  + "    \"fullName\": \"Ying Sun 31\",\n"
-                                  + "    \"email\": \"ying3@email.com\",\n"
-                                  + "    \"gender\": \"male\",\n"
-                                  + "    \"birthday\": \"2016-01-25T00:00:00.000+00:00\",\n"
-                                  + "    \"createdAt\": \"2022-02-15T00:22:26.633+00:00\",\n"
-                                  + "    \"updatedAt\": \"2022-02-15T05:32:29.776+00:00\",\n"
-                                  + "    \"userCredentials\": [\n"
-                                  + "        {\n"
-                                  + "            \"id\": 6,\n"
-                                  + "            \"userId\": \"bade0968-d77c-480b-9031-72177aca66e1\",\n"
-                                  + "            \"credentialType\": \"email\",\n"
-                                  + "            \"credentialId\": \"ying3@email.com\",\n"
-                                  + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-15T00:22:26.653+00:00\",\n"
-                                  + "            \"updatedAt\": \"2022-02-15T00:22:26.653+00:00\"\n"
-                                  + "        }\n"
-                                  + "    ],\n"
-                                  + "    \"roles\": [\n"
-                                  + "        {\n"
-                                  + "            \"id\": 1,\n"
-                                  + "            \"roleName\": \"Super Admin\",\n"
-                                  + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663+00:00\",\n"
-                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663+00:00\",\n"
-                                  + "            \"permissions\": [\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 1,\n"
-                                  + "                    \"name\": \"USERS_GET_USER\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 2,\n"
-                                  + "                    \"name\": \"USERS_GET_ME\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 3,\n"
-                                  + "                    \"name\": \"USERS_GET_USER_ROLES\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 4,\n"
-                                  + "                    \"name\": \"USERS_GET_ME_ROLES\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 5,\n"
-                                  + "                    \"name\": \"USERS_UPDATE_USER_ROLES\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 6,\n"
-                                  + "                    \"name\": \"USERS_UPDATE_ME_ROLES\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 7,\n"
-                                  + "                    \"name\": \"USERS_UPDATE_USER_PROFILE\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 8,\n"
-                                  + "                    \"name\": \"USERS_UPDATE_ME_PROFILE\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 9,\n"
-                                  + "                    \"name\": \"USERS_CHANGE_ME_PASSWORD\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 10,\n"
-                                  + "                    \"name\": \"USERS_CHANGE_USER_PASSWORD\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 11,\n"
-                                  + "                    \"name\": \"USERS_GET_USERS\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 12,\n"
-                                  + "                    \"name\": \"ROLES_GET_ROLES\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 13,\n"
-                                  + "                    \"name\": \"ROLES_CREATE_ROLE\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 14,\n"
-                                  + "                    \"name\": \"ROLES_UPDATE_ROLE\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 15,\n"
-                                  + "                    \"name\": \"ROLES_DELETE_ROLE\"\n"
-                                  + "                }\n"
-                                  + "            ]\n"
-                                  + "        }\n"
-                                  + "    ]\n"
-                                  + "}")
+                          value = SwaggerDocConstant.GET_USER_RESPONSE_BODY)
                   }
               )
           )
@@ -152,6 +61,7 @@ public class UserController {
   @Permissions({"USERS_GET_USER"})
   public UserDto getUser(
       @PathVariable("userId") Long userId,
+      @Parameter(required = false)
       @AuthenticatedUser UserDto userDto) {
     log.debug("Get user " + userId);
     return this.userService.getUser(userId);
@@ -171,60 +81,7 @@ public class UserController {
                   examples = {
                       @ExampleObject(
                           name = "Response properties",
-                          value =
-                              "{\n"
-                                  + "    \"id\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
-                                  + "    \"fullName\": \"Ying Sun\",\n"
-                                  + "    \"email\": \"ying@email.com\",\n"
-                                  + "    \"gender\": \"male\",\n"
-                                  + "    \"birthday\": \"2016-01-25T00:00:00\",\n"
-                                  + "    \"createdAt\": \"2022-02-10T01:23:08.253\",\n"
-                                  + "    \"updatedAt\": \"2022-02-10T01:23:08.253\",\n"
-                                  + "    \"userCredentials\": [\n"
-                                  + "        {\n"
-                                  + "            \"id\": 4,\n"
-                                  + "            \"userId\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
-                                  + "            \"credentialType\": \"email\",\n"
-                                  + "            \"credentialId\": \"ying@email.com\",\n"
-                                  + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-10T01:23:08.269\",\n"
-                                  + "            \"updatedAt\": \"2022-02-10T01:23:08.269\"\n"
-                                  + "        }\n"
-                                  + "    ],\n"
-                                  + "    \"roles\": [\n"
-                                  + "        {\n"
-                                  + "            \"id\": 1,\n"
-                                  + "            \"roleName\": \"Super Admin\",\n"
-                                  + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"permissions\": [\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 1,\n"
-                                  + "                    \"name\": \"USERS_GET_USER\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 2,\n"
-                                  + "                    \"name\": \"USERS_GET_ME\"\n"
-                                  + "                }\n"
-                                  + "            ]\n"
-                                  + "        },\n"
-                                  + "        {\n"
-                                  + "            \"id\": 2,\n"
-                                  + "            \"roleName\": \"End User\",\n"
-                                  + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"createdBy\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
-                                  + "            \"permissions\": [\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 2,\n"
-                                  + "                    \"name\": \"USERS_GET_ME\"\n"
-                                  + "                }\n"
-                                  + "            ]\n"
-                                  + "        }\n"
-                                  + "    ]\n"
-                                  + "}")
+                          value = SwaggerDocConstant.GET_USER_RESPONSE_BODY)
                   }
               )
           )
@@ -250,35 +107,7 @@ public class UserController {
                   examples = {
                       @ExampleObject(
                           name = "Response properties",
-                          value =
-                              "{\n"
-                                  + "    \"id\": \"6ce4325e-1e5e-47d4-bc15-d8d108dd882a\",\n"
-                                  + "    \"fullName\": \"Ying Sun\",\n"
-                                  + "    \"email\": \"ying2@email.com\",\n"
-                                  + "    \"gender\": \"male\",\n"
-                                  + "    \"birthday\": \"2016-01-25T00:00:00\",\n"
-                                  + "    \"createdAt\": \"2022-02-10T15:34:20.222\",\n"
-                                  + "    \"updatedAt\": \"2022-02-10T15:34:20.222\",\n"
-                                  + "    \"userCredentials\": [\n"
-                                  + "        {\n"
-                                  + "            \"id\": 5,\n"
-                                  + "            \"userId\": \"6ce4325e-1e5e-47d4-bc15-d8d108dd882a\",\n"
-                                  + "            \"credentialType\": \"email\",\n"
-                                  + "            \"credentialId\": \"ying2@email.com\",\n"
-                                  + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-10T15:34:20.383\",\n"
-                                  + "            \"updatedAt\": \"2022-02-10T15:34:20.383\"\n"
-                                  + "        }\n"
-                                  + "    ],\n"
-                                  + "    \"roles\": [\n"
-                                  + "        {\n"
-                                  + "            \"id\": 1\n"
-                                  + "        },\n"
-                                  + "        {\n"
-                                  + "            \"id\": 2\n"
-                                  + "        }\n"
-                                  + "    ]\n"
-                                  + "}")
+                          value = SwaggerDocConstant.CREATE_USER_RESPONSE_BODY)
                   }
               )
           )
@@ -294,27 +123,7 @@ public class UserController {
               examples = {
                   @ExampleObject(
                       name = "Response properties",
-                      value = "{\n"
-                          + "    \"fullName\": \"Ying Sun\",\n"
-                          + "    \"email\": \"ying2@email.com\",\n"
-                          + "    \"gender\": \"male\",\n"
-                          + "    \"birthday\": \"2016-01-25T00:00:00\",\n"
-                          + "    \"userCredentials\": [\n"
-                          + "        {\n"
-                          + "            \"credentialType\": \"email\",\n"
-                          + "            \"credentialId\": \"ying2@email.com\",\n"
-                          + "            \"password\": \"123456\"\n"
-                          + "        }\n"
-                          + "    ],\n"
-                          + "    \"roles\": [\n"
-                          + "        {\n"
-                          + "            \"id\": 1\n"
-                          + "        },\n"
-                          + "        {\n"
-                          + "            \"id\": 2\n"
-                          + "        }\n"
-                          + "    ]\n"
-                          + "}")
+                      value = SwaggerDocConstant.CREATE_USER_REQUEST_BODY)
               }))
       @RequestBody UserDto user
   ) {
@@ -334,61 +143,7 @@ public class UserController {
                   examples = {
                       @ExampleObject(
                           name = "Response properties",
-                          value =
-                              "{\n"
-                                  + "    \"id\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
-                                  + "    \"fullName\": \"Ying Sun\",\n"
-                                  + "    \"email\": \"ying@email.com\",\n"
-                                  + "    \"gender\": \"male\",\n"
-                                  + "    \"birthday\": \"2016-01-25T00:00:00\",\n"
-                                  + "    \"createdAt\": \"2022-02-10T01:23:08.253\",\n"
-                                  + "    \"updatedAt\": \"2022-02-10T01:23:08.253\",\n"
-                                  + "    \"userCredentials\": [\n"
-                                  + "        {\n"
-                                  + "            \"id\": 4,\n"
-                                  + "            \"userId\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
-                                  + "            \"credentialType\": \"email\",\n"
-                                  + "            \"credentialId\": \"ying@email.com\",\n"
-                                  + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-10T01:23:08.269\",\n"
-                                  + "            \"updatedAt\": \"2022-02-10T01:23:08.269\"\n"
-                                  + "        }\n"
-                                  + "    ],\n"
-                                  + "    \"roles\": [\n"
-                                  + "        {\n"
-                                  + "            \"id\": 1,\n"
-                                  + "            \"roleName\": \"Super Admin\",\n"
-                                  + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"permissions\": [\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 1,\n"
-                                  + "                    \"name\": \"USERS_GET_USER\"\n"
-                                  + "                },\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 2,\n"
-                                  + "                    \"name\": \"USERS_GET_ME\"\n"
-                                  + "                }\n"
-                                  + "            ]\n"
-                                  + "        },\n"
-                                  + "        {\n"
-                                  + "            \"id\": 2,\n"
-                                  + "            \"roleName\": \"End User\",\n"
-                                  + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"createdBy\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
-                                  + "            \"permissions\": [\n"
-                                  + "                {\n"
-                                  + "                    \"id\": 2,\n"
-                                  + "                    \"name\": \"USERS_GET_ME\"\n"
-                                  + "                }\n"
-                                  + "            ]\n"
-                                  + "        }\n"
-                                  + "    ],\n"
-                                  + "    \"accessToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb20ueWluZy51c2VyLW1hbmFnZW1lbnQiLCJVU0VSX0lEIjoiNGRjM2U0NmUtNWRmZi00YjRkLTg5YjgtNjY4YTVlMTFkN2YyIiwiQ1JFREVOVElBTF9JRCI6InlpbmdAZW1haWwuY29tIiwiQ1JFREVOVElBTF9UWVBFIjoiZW1haWwiLCJleHAiOjE2NDQ1NjEyNDV9.mc8vxHRL35YIeNzZOdK7hEyy1gNwVLpreDDbPSacQKM\"\n"
-                                  + "}")
+                          value = SwaggerDocConstant.AUTHENTICATE_USER_RESPONSE_BODY)
                   }
               )
           )
@@ -405,12 +160,7 @@ public class UserController {
               examples = {
                   @ExampleObject(
                       name = "Response properties",
-                      value =
-                          "{\n"
-                          + "    \"credentialType\": \"email\",\n"
-                          + "    \"credentialId\": \"ying@email.com\",\n"
-                          + "    \"password\": \"123456\"\n"
-                          + "}")
+                      value = SwaggerDocConstant.AUTHENTICATE_USER_REQUEST_BODY)
               }))
       @RequestBody UserCredentialDto userCredentialDto) {
     return this.userService.authenticateUser(userId, userCredentialDto);
@@ -477,40 +227,7 @@ public class UserController {
                   examples = {
                       @ExampleObject(
                           name = "Response properties",
-                          value =
-                              "[\n"
-                                  + "    {\n"
-                                  + "        \"id\": 1,\n"
-                                  + "        \"roleName\": \"Super Admin\",\n"
-                                  + "        \"status\": \"enabled\",\n"
-                                  + "        \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "        \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "        \"permissions\": [\n"
-                                  + "            {\n"
-                                  + "                \"id\": 1,\n"
-                                  + "                \"name\": \"USERS_GET_USER\"\n"
-                                  + "            },\n"
-                                  + "            {\n"
-                                  + "                \"id\": 2,\n"
-                                  + "                \"name\": \"USERS_GET_ME\"\n"
-                                  + "            }\n"
-                                  + "        ]\n"
-                                  + "    },\n"
-                                  + "    {\n"
-                                  + "        \"id\": 2,\n"
-                                  + "        \"roleName\": \"End User\",\n"
-                                  + "        \"status\": \"enabled\",\n"
-                                  + "        \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "        \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "        \"createdBy\": \"e826e938-5362-4779-9707-bd63db20d9b4\",\n"
-                                  + "        \"permissions\": [\n"
-                                  + "            {\n"
-                                  + "                \"id\": 2,\n"
-                                  + "                \"name\": \"USERS_GET_ME\"\n"
-                                  + "            }\n"
-                                  + "        ]\n"
-                                  + "    }\n"
-                                  + "]")
+                          value = SwaggerDocConstant.GET_USER_ROLES_RESPONSE_BODY)
                   }
               )
           )
@@ -535,40 +252,7 @@ public class UserController {
                   examples = {
                       @ExampleObject(
                           name = "Response properties",
-                          value =
-                              "[\n"
-                                  + "    {\n"
-                                  + "        \"id\": 1,\n"
-                                  + "        \"roleName\": \"Super Admin\",\n"
-                                  + "        \"status\": \"enabled\",\n"
-                                  + "        \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "        \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "        \"permissions\": [\n"
-                                  + "            {\n"
-                                  + "                \"id\": 1,\n"
-                                  + "                \"name\": \"USERS_GET_USER\"\n"
-                                  + "            },\n"
-                                  + "            {\n"
-                                  + "                \"id\": 2,\n"
-                                  + "                \"name\": \"USERS_GET_ME\"\n"
-                                  + "            }\n"
-                                  + "        ]\n"
-                                  + "    },\n"
-                                  + "    {\n"
-                                  + "        \"id\": 2,\n"
-                                  + "        \"roleName\": \"End User\",\n"
-                                  + "        \"status\": \"enabled\",\n"
-                                  + "        \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "        \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "        \"createdBy\": \"e826e938-5362-4779-9707-bd63db20d9b4\",\n"
-                                  + "        \"permissions\": [\n"
-                                  + "            {\n"
-                                  + "                \"id\": 2,\n"
-                                  + "                \"name\": \"USERS_GET_ME\"\n"
-                                  + "            }\n"
-                                  + "        ]\n"
-                                  + "    }\n"
-                                  + "]")
+                          value = SwaggerDocConstant.GET_USER_ROLES_RESPONSE_BODY)
                   }
               )
           )
@@ -605,12 +289,7 @@ public class UserController {
               examples = {
                   @ExampleObject(
                       name = "Response properties",
-                      value =
-                          "[\n"
-                              + "    {\n"
-                              + "        \"id\": 2\n"
-                              + "    }\n"
-                              + "]")
+                      value = SwaggerDocConstant.UPDATE_USER_ROLES_REQUEST_BODY)
               }))
       @RequestBody List<RoleDto> roles
   ) {
@@ -641,12 +320,7 @@ public class UserController {
               examples = {
                   @ExampleObject(
                       name = "Response properties",
-                      value =
-                          "[\n"
-                              + "    {\n"
-                              + "        \"id\": 2\n"
-                              + "    }\n"
-                              + "]")
+                      value = SwaggerDocConstant.UPDATE_USER_ROLES_REQUEST_BODY)
               }))
       @RequestBody List<RoleDto> roles
   ) {
@@ -660,14 +334,34 @@ public class UserController {
       responses = {
           @ApiResponse(
               description = "Successful response",
-              responseCode = "200"
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = UserDto.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value = SwaggerDocConstant.UPDATE_USER_PROFILE_RESPONSE_BODY)
+                  }
+              )
           )
       })
   @PutMapping("/{userId}")
   @Permissions({"USERS_UPDATE_USER_PROFILE"})
   public UserDto updateUserProfile (
       @PathVariable("userId") Long userId,
-      @RequestBody UserDto userDto) {
+      @RequestBody
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "",
+          required = true,
+          content = @Content(
+              schema = @Schema(implementation = UserDto.class),
+              mediaType = "application/json",
+              examples = {
+                  @ExampleObject(
+                      name = "Response properties",
+                      value = SwaggerDocConstant.UPDATE_USER_PROFILE_REQUEST_BODY)
+              })) UserDto userDto) {
     return this.userService.updateUserProfile(userId, userDto);
   }
 
@@ -678,14 +372,34 @@ public class UserController {
       responses = {
           @ApiResponse(
               description = "Successful response",
-              responseCode = "200"
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = UserDto.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value = SwaggerDocConstant.UPDATE_USER_PROFILE_RESPONSE_BODY)
+                  }
+              )
           )
       })
   @PutMapping("/me")
   @Permissions({"USERS_UPDATE_ME_PROFILE"})
   public UserDto updateMeProfile (
       @AuthenticatedUser UserDto authenticatedUserDto,
-      @RequestBody UserDto userDto) {
+      @RequestBody
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "",
+          required = true,
+          content = @Content(
+              schema = @Schema(implementation = UserDto.class),
+              mediaType = "application/json",
+              examples = {
+                  @ExampleObject(
+                      name = "Response properties",
+                      value = SwaggerDocConstant.UPDATE_USER_PROFILE_REQUEST_BODY)
+              })) UserDto userDto) {
     return this.userService.updateUserProfile(authenticatedUserDto.getId(), userDto);
   }
 
@@ -696,14 +410,26 @@ public class UserController {
       responses = {
           @ApiResponse(
               description = "Successful response",
-              responseCode = "200"
+              responseCode = "204"
           )
       })
   @PutMapping("/me/password")
   @Permissions({"USERS_CHANGE_ME_PASSWORD"})
+  @ResponseStatus(value = HttpStatus.NO_CONTENT)
   public void changeMePassword (
       @AuthenticatedUser UserDto authenticatedUserDto,
-      @RequestBody UserCredentialDto userCredentialDto
+      @RequestBody
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "",
+          required = true,
+          content = @Content(
+              schema = @Schema(implementation = UserCredentialDto.class),
+              mediaType = "application/json",
+              examples = {
+                  @ExampleObject(
+                      name = "Response properties",
+                      value = SwaggerDocConstant.CHANGE_USER_PASSWORD_REQUEST_BODY)
+              })) UserCredentialDto userCredentialDto
   ) {
     this.userService.changeUserPassword(authenticatedUserDto.getId(), userCredentialDto);
   }
@@ -715,15 +441,27 @@ public class UserController {
       responses = {
           @ApiResponse(
               description = "Successful response",
-              responseCode = "200"
+              responseCode = "204"
           )
       })
   @PutMapping("/{userId}/password")
   @Permissions({"USERS_CHANGE_USER_PASSWORD"})
+  @ResponseStatus(value = HttpStatus.NO_CONTENT)
   public void changeUserPassword(
       @PathVariable("userId") Long userId,
       @AuthenticatedUser UserDto authenticatedUserDto,
-      @RequestBody UserCredentialDto userCredentialDto
+      @RequestBody
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "",
+          required = true,
+          content = @Content(
+              schema = @Schema(implementation = UserCredentialDto.class),
+              mediaType = "application/json",
+              examples = {
+                  @ExampleObject(
+                      name = "Response properties",
+                      value = SwaggerDocConstant.CHANGE_USER_PASSWORD_REQUEST_BODY)
+              })) UserCredentialDto userCredentialDto
   ) {
     this.userService.changeUserPassword(userId, userCredentialDto);
   }
@@ -735,7 +473,16 @@ public class UserController {
       responses = {
           @ApiResponse(
               description = "Successful response",
-              responseCode = "200"
+              responseCode = "200",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = List.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "Response properties",
+                          value = SwaggerDocConstant.GET_USERS_RESPONSE_BODY)
+                  }
+              )
           )
       })
   @GetMapping("")
