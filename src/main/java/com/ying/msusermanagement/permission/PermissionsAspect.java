@@ -40,7 +40,7 @@ public class PermissionsAspect {
     Object[] args = joinPoint.getArgs();
 
     String userAccessToken = this.getUserToken();
-    String userId = this.jwtService.getClaimFromToken(userAccessToken, JWTService.CLAIM_USER_ID);
+    Long userId = Long.valueOf(this.jwtService.getClaimFromToken(userAccessToken, JWTService.CLAIM_USER_ID));
     UserDto user = this.userService.getUserForPermissionVerification(userId);
 
     this.verifyPermissions(joinPoint, user);

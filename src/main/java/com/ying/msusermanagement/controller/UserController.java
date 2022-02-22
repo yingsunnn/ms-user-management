@@ -54,22 +54,22 @@ public class UserController {
                           name = "Response properties",
                           value =
                               "{\n"
-                                  + "    \"id\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
-                                  + "    \"fullName\": \"Ying Sun\",\n"
-                                  + "    \"email\": \"ying@email.com\",\n"
+                                  + "    \"id\": \"bade0968-d77c-480b-9031-72177aca66e1\",\n"
+                                  + "    \"fullName\": \"Ying Sun 31\",\n"
+                                  + "    \"email\": \"ying3@email.com\",\n"
                                   + "    \"gender\": \"male\",\n"
-                                  + "    \"birthday\": \"2016-01-25T00:00:00\",\n"
-                                  + "    \"createdAt\": \"2022-02-10T01:23:08.253\",\n"
-                                  + "    \"updatedAt\": \"2022-02-10T01:23:08.253\",\n"
+                                  + "    \"birthday\": \"2016-01-25T00:00:00.000+00:00\",\n"
+                                  + "    \"createdAt\": \"2022-02-15T00:22:26.633+00:00\",\n"
+                                  + "    \"updatedAt\": \"2022-02-15T05:32:29.776+00:00\",\n"
                                   + "    \"userCredentials\": [\n"
                                   + "        {\n"
-                                  + "            \"id\": 4,\n"
-                                  + "            \"userId\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
+                                  + "            \"id\": 6,\n"
+                                  + "            \"userId\": \"bade0968-d77c-480b-9031-72177aca66e1\",\n"
                                   + "            \"credentialType\": \"email\",\n"
-                                  + "            \"credentialId\": \"ying@email.com\",\n"
+                                  + "            \"credentialId\": \"ying3@email.com\",\n"
                                   + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-10T01:23:08.269\",\n"
-                                  + "            \"updatedAt\": \"2022-02-10T01:23:08.269\"\n"
+                                  + "            \"createdAt\": \"2022-02-15T00:22:26.653+00:00\",\n"
+                                  + "            \"updatedAt\": \"2022-02-15T00:22:26.653+00:00\"\n"
                                   + "        }\n"
                                   + "    ],\n"
                                   + "    \"roles\": [\n"
@@ -77,8 +77,8 @@ public class UserController {
                                   + "            \"id\": 1,\n"
                                   + "            \"roleName\": \"Super Admin\",\n"
                                   + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
+                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663+00:00\",\n"
+                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663+00:00\",\n"
                                   + "            \"permissions\": [\n"
                                   + "                {\n"
                                   + "                    \"id\": 1,\n"
@@ -87,20 +87,58 @@ public class UserController {
                                   + "                {\n"
                                   + "                    \"id\": 2,\n"
                                   + "                    \"name\": \"USERS_GET_ME\"\n"
-                                  + "                }\n"
-                                  + "            ]\n"
-                                  + "        },\n"
-                                  + "        {\n"
-                                  + "            \"id\": 2,\n"
-                                  + "            \"roleName\": \"End User\",\n"
-                                  + "            \"status\": \"enabled\",\n"
-                                  + "            \"createdAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"updatedAt\": \"2022-02-09T20:42:52.663\",\n"
-                                  + "            \"createdBy\": \"4dc3e46e-5dff-4b4d-89b8-668a5e11d7f2\",\n"
-                                  + "            \"permissions\": [\n"
+                                  + "                },\n"
                                   + "                {\n"
-                                  + "                    \"id\": 2,\n"
-                                  + "                    \"name\": \"USERS_GET_ME\"\n"
+                                  + "                    \"id\": 3,\n"
+                                  + "                    \"name\": \"USERS_GET_USER_ROLES\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 4,\n"
+                                  + "                    \"name\": \"USERS_GET_ME_ROLES\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 5,\n"
+                                  + "                    \"name\": \"USERS_UPDATE_USER_ROLES\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 6,\n"
+                                  + "                    \"name\": \"USERS_UPDATE_ME_ROLES\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 7,\n"
+                                  + "                    \"name\": \"USERS_UPDATE_USER_PROFILE\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 8,\n"
+                                  + "                    \"name\": \"USERS_UPDATE_ME_PROFILE\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 9,\n"
+                                  + "                    \"name\": \"USERS_CHANGE_ME_PASSWORD\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 10,\n"
+                                  + "                    \"name\": \"USERS_CHANGE_USER_PASSWORD\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 11,\n"
+                                  + "                    \"name\": \"USERS_GET_USERS\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 12,\n"
+                                  + "                    \"name\": \"ROLES_GET_ROLES\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 13,\n"
+                                  + "                    \"name\": \"ROLES_CREATE_ROLE\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 14,\n"
+                                  + "                    \"name\": \"ROLES_UPDATE_ROLE\"\n"
+                                  + "                },\n"
+                                  + "                {\n"
+                                  + "                    \"id\": 15,\n"
+                                  + "                    \"name\": \"ROLES_DELETE_ROLE\"\n"
                                   + "                }\n"
                                   + "            ]\n"
                                   + "        }\n"
@@ -113,7 +151,7 @@ public class UserController {
   @GetMapping("/{userId}")
   @Permissions({"USERS_GET_USER"})
   public UserDto getUser(
-      @PathVariable("userId") String userId,
+      @PathVariable("userId") Long userId,
       @AuthenticatedUser UserDto userDto) {
     log.debug("Get user " + userId);
     return this.userService.getUser(userId);
@@ -357,7 +395,7 @@ public class UserController {
       })
   @PostMapping("/authentication/{userId}")
   public UserDto authenticateUser (
-      @PathVariable("userId") String userId,
+      @PathVariable("userId") Long userId,
       @io.swagger.v3.oas.annotations.parameters.RequestBody(
           description = "",
           required = true,
@@ -479,7 +517,7 @@ public class UserController {
       })
   @GetMapping("/{userId}/roles")
   @Permissions({"USERS_GET_USER_ROLES"})
-  public List<RoleDto> getUserRoles (@PathVariable("userId") String userId) {
+  public List<RoleDto> getUserRoles (@PathVariable("userId") Long userId) {
     return this.roleService.getUserRoles(userId);
   }
 
@@ -557,7 +595,7 @@ public class UserController {
   @Permissions({"USERS_UPDATE_USER_ROLES"})
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   public void updateUserRoles (
-      @PathVariable("userId") String userId,
+      @PathVariable("userId") Long userId,
       @io.swagger.v3.oas.annotations.parameters.RequestBody(
           description = "",
           required = true,
@@ -628,7 +666,7 @@ public class UserController {
   @PutMapping("/{userId}")
   @Permissions({"USERS_UPDATE_USER_PROFILE"})
   public UserDto updateUserProfile (
-      @PathVariable("userId") String userId,
+      @PathVariable("userId") Long userId,
       @RequestBody UserDto userDto) {
     return this.userService.updateUserProfile(userId, userDto);
   }
@@ -683,7 +721,7 @@ public class UserController {
   @PutMapping("/{userId}/password")
   @Permissions({"USERS_CHANGE_USER_PASSWORD"})
   public void changeUserPassword(
-      @PathVariable("userId") String userId,
+      @PathVariable("userId") Long userId,
       @AuthenticatedUser UserDto authenticatedUserDto,
       @RequestBody UserCredentialDto userCredentialDto
   ) {

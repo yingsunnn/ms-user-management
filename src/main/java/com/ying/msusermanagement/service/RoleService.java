@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ public class RoleService {
   private final RoleRepository roleRepository;
   private final PermissionRepository permissionRepository;
 
-  public List<RoleDto> getUserRoles(String userId) {
+  public List<RoleDto> getUserRoles(Long userId) {
     List<Role> roles = this.roleRepository.retrieveUserRoles(userId);
 
     if (CollectionUtils.isEmpty(roles)) {
@@ -79,7 +78,7 @@ public class RoleService {
   }
 
   public void storeUserRoles(
-      String userId,
+      Long userId,
       List<RoleDto> roles
   ) {
     if (CollectionUtils.isEmpty(roles)) {
@@ -93,7 +92,7 @@ public class RoleService {
 
   @Transactional
   public void updateUserRoles(
-      String userId,
+      Long userId,
       List<RoleDto> roles
   ) {
     this.roleRepository.delUserRoles(userId);
@@ -116,7 +115,7 @@ public class RoleService {
     roleDto.setStatus("enabled")
     .setCreatedAt(now)
     .setUpdatedAt(now)
-    .setCreatedBy(UUID.fromString(userDto.getId()));
+    .setCreatedBy(userDto.getId());
 
     Role savedRole = this.roleRepository.save(OrikaMapperUtils.map(roleDto, Role.class));
     roleDto.setId(savedRole.getId());
@@ -146,10 +145,11 @@ public class RoleService {
 
     this.roleRepository.save(role);
 
+    this.updateRolePermissions(roleDto);
+
     return OrikaMapperUtils.map(role, RoleDto.class);
   }
 
-  @Transactional
   public RoleDto updateRolePermissions (RoleDto roleDto) {
     this.roleRepository.delRolePermissions(roleDto.getId());
 

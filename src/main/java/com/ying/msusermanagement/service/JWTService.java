@@ -33,13 +33,13 @@ public class JWTService {
 
   private Algorithm algorithm;
 
-  public String generateJWTToken(String userId, String credentialType, String credentialId) {
+  public String generateJWTToken(Long userId, String credentialType, String credentialId) {
 
     Instant expiresAt = Instant.now().plus(expireInHour, ChronoUnit.HOURS);
 
     String jwtToken = JWT.create()
         .withIssuer(issuer)
-        .withClaim(CLAIM_USER_ID, userId)
+        .withClaim(CLAIM_USER_ID, String.valueOf(userId))
         .withClaim(CLAIM_CREDENTIAL_TYPE, credentialType)
         .withClaim(CLAIM_CREDENTIAL_ID, credentialId)
         .withExpiresAt(Date.from(expiresAt))

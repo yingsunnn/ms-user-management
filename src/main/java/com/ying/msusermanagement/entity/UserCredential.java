@@ -28,7 +28,7 @@ public class UserCredential {
   private Long id;
 
   @Column(name="user_id")
-  private UUID userId;
+  private Long userId;
 
   @Column(name="credential_type")
   private String credentialType;

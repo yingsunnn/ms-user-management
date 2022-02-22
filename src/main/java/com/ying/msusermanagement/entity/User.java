@@ -1,13 +1,10 @@
 package com.ying.msusermanagement.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,8 +20,8 @@ import lombok.experimental.Accessors;
 public class User {
 
   @Id
-  @GeneratedValue
-  private UUID id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   @Column(name="full_name")
   private String fullName;
@@ -45,5 +42,5 @@ public class User {
   private Long updatedAt;
 
   @Column(name="created_by")
-  private UUID createdBy;
+  private Long createdBy;
 }

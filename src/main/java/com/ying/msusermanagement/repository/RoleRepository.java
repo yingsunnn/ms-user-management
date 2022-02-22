@@ -15,19 +15,19 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
       value = " select r.* \n "
           + " from role r, user_role ur \n "
           + " where r.id = ur.role_id \n "
-          + " and ur.user_id = UUID_TO_BIN(:userId)",
+          + " and ur.user_id = :userId",
       nativeQuery = true)
-  List<Role> retrieveUserRoles (@Param("userId") String userId);
+  List<Role> retrieveUserRoles (@Param("userId") Long userId);
 
   @Modifying
-  @Query(value = "insert into user_role (user_id, role_id) values (UUID_TO_BIN(:userId), :roleId)",
+  @Query(value = "insert into user_role (user_id, role_id) values (:userId, :roleId)",
       nativeQuery = true)
-  void insertUserRole(String userId, Long roleId);
+  void insertUserRole(Long userId, Long roleId);
 
   @Modifying
-  @Query(value = "delete from user_role where user_id = UUID_TO_BIN(:userId)",
+  @Query(value = "delete from user_role where user_id = :userId",
      nativeQuery = true)
-  void delUserRoles (String userId);
+  void delUserRoles (Long userId);
 
   @Modifying
   @Query(value = "insert into role_permission (role_id, permission_id) values (:roleId, :permissionId)",

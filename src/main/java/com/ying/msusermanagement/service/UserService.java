@@ -13,11 +13,9 @@ import com.ying.msusermanagement.repository.UserRepository;
 import com.ying.msusermanagement.utils.OrikaMapperUtils;
 import com.ying.msusermanagement.utils.PBKDF2Utils;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -51,7 +49,7 @@ public class UserService {
     );
 
     // Store user role
-    this.roleService.storeUserRoles(createdUser.getId().toString(), userDto.getRoles());
+    this.roleService.storeUserRoles(createdUser.getId(), userDto.getRoles());
 
     // mapping
     UserDto createdUserDto = OrikaMapperUtils.map(createdUser, UserDto.class);
@@ -118,7 +116,7 @@ public class UserService {
   }
 
   public UserDto authenticateUser(
-      String userId,
+      Long userId,
       UserCredentialDto userCredentialDto
   ) {
     // retrieve user and user credential
@@ -130,7 +128,7 @@ public class UserService {
             userCredentialDto.getCredentialType() + " Credential id: " + userCredentialDto.getCredentialId())
     );
 
-    UserDto userDto = this.getUserProfile(userId);
+    UserDto userDto = this.getUserDtoProfile(userId);
 
     // verify password
     if (false == this.pbkdf2Utils.authenticate(userCredentialDto.getPassword(),
@@ -157,10 +155,10 @@ public class UserService {
     return userDto;
   }
 
-  private List<UserCredentialDto> getUserCredentials(String userId) {
+  private List<UserCredentialDto> getUserCredentials(Long userId) {
 
     List<UserCredentialDto> userCredentialDtos = OrikaMapperUtils.map(
-        this.userCredentialRepository.findByUserId(UUID.fromString(userId)), UserCredentialDto.class);
+        this.userCredentialRepository.findByUserId(userId), UserCredentialDto.class);
 
     if (CollectionUtils.isEmpty(userCredentialDtos)) {
       throw new DataNotExistException("User credential doesn't exist.");
@@ -173,30 +171,32 @@ public class UserService {
     return userCredentialDtos;
   }
 
-  private UserDto getUserProfile(String userId) {
-    return OrikaMapperUtils.map(this.getUserProfile(UUID.fromString(userId)), UserDto.class);
+  private UserDto getUserDtoProfile(Long userId) {
+    return OrikaMapperUtils.map(
+        this.getUserProfile(userId)
+        , UserDto.class);
   }
 
-  private User getUserProfile(UUID userId) {
+  private User getUserProfile(Long userId) {
     return this.userRepository.findById(userId).orElseThrow(
-        () -> new DataNotExistException("User (" + userId + ") profile doesn't exist."));
+            () -> new DataNotExistException("User (" + userId + ") profile doesn't exist."));
   }
 
-  public UserDto getUser(String userId) {
-    return this.getUserProfile(userId)
+  public UserDto getUser(Long userId) {
+    return this.getUserDtoProfile(userId)
         .setUserCredentials(this.getUserCredentials(userId))
         .setRoles(this.roleService.getUserRoles(userId));
   }
 
-  public UserDto getUserForPermissionVerification(String userId) {
-    return this.getUserProfile(userId).setRoles(this.roleService.getUserRoles(userId));
+  public UserDto getUserForPermissionVerification(Long userId) {
+    return this.getUserDtoProfile(userId).setRoles(this.roleService.getUserRoles(userId));
   }
 
   public UserDto updateUserProfile(
-      String userId,
+      Long userId,
       UserDto userDto
   ) {
-    User user = this.getUserProfile(UUID.fromString(userId));
+    User user = this.getUserProfile(userId);
 
     user.setUpdatedAt(Instant.now().toEpochMilli());
 
@@ -219,7 +219,7 @@ public class UserService {
   }
 
   public void changeUserPassword(
-      String userId,
+      Long userId,
       UserCredentialDto userCredentialDto
   ) {
 
@@ -227,7 +227,7 @@ public class UserService {
     UserCredential userCredential = this.userCredentialRepository.findByCredentialTypeAndCredentialIdAndUserId(
         userCredentialDto.getCredentialType(),
         userCredentialDto.getCredentialId(),
-        UUID.fromString(userId)
+        userId
     ).orElseThrow(() -> new DuplicatedDataException(
         "User credential doesn't exist. Credential type: " + userCredentialDto.getCredentialType()
             + " Credential id: " + userCredentialDto.getCredentialId())
