@@ -6,6 +6,7 @@ import com.ying.msusermanagement.permission.AuthenticatedUser;
 import com.ying.msusermanagement.permission.Permissions;
 import com.ying.msusermanagement.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -90,6 +91,11 @@ public class RoleController {
                       value = SwaggerDocConstant.CREATE_ROLE_REQUEST_BODY)
               }))
       @RequestBody RoleDto roleDto,
+      @Parameter(examples = {
+          @ExampleObject(
+              name = "N/A",
+              value= "{}"
+          )})
       @AuthenticatedUser UserDto userDto
   ) {
     return this.roleService.createRole(roleDto, userDto);
@@ -130,6 +136,11 @@ public class RoleController {
                       value = SwaggerDocConstant.UPDATE_ROLE_REQUEST_BODY)
               }))
       @RequestBody RoleDto roleDto,
+      @Parameter(examples = {
+          @ExampleObject(
+              name = "N/A",
+              value= "{}"
+          )})
       @AuthenticatedUser UserDto userDto
   ) {
     roleDto.setId(roleId);
@@ -159,6 +170,11 @@ public class RoleController {
   @Permissions("ROLES_DELETE_ROLE")
   public RoleDto deleteRole (
       @PathVariable("roleId") Long roleId,
+      @Parameter(examples = {
+          @ExampleObject(
+              name = "N/A",
+              value= "{}"
+          )})
       @AuthenticatedUser UserDto userDto
   ) {
     return this.roleService.deleteRole(roleId, userDto);

@@ -61,7 +61,11 @@ public class UserController {
   @Permissions({"USERS_GET_USER"})
   public UserDto getUser(
       @PathVariable("userId") Long userId,
-      @Parameter(required = false)
+      @Parameter(examples = {
+          @ExampleObject(
+              name = "N/A",
+              value= "{}"
+          )})
       @AuthenticatedUser UserDto userDto) {
     log.debug("Get user " + userId);
     return this.userService.getUser(userId);
@@ -89,6 +93,11 @@ public class UserController {
   @GetMapping("/me")
   @Permissions({"USERS_GET_ME"})
   public UserDto getUserMe(
+      @Parameter(examples = {
+          @ExampleObject(
+              name = "N/A",
+              value= "{}"
+          )})
       @AuthenticatedUser UserDto userDto) {
     return this.userService.getUser(userDto.getId());
   }
@@ -260,6 +269,11 @@ public class UserController {
   @GetMapping("/me/roles")
   @Permissions({"USERS_GET_ME_ROLES"})
   public List<RoleDto> getMeRoles (
+      @Parameter(examples = {
+          @ExampleObject(
+              name = "N/A",
+              value= "{}"
+          )})
       @AuthenticatedUser UserDto authenticatedUserDto
   ) {
     return this.roleService.getUserRoles(authenticatedUserDto.getId());
@@ -310,6 +324,11 @@ public class UserController {
   @Permissions({"USERS_UPDATE_ME_ROLES"})
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   public void updateMeRoles (
+      @Parameter(examples = {
+          @ExampleObject(
+              name = "N/A",
+              value= "{}"
+          )})
       @AuthenticatedUser UserDto authenticatedUserDto,
       @io.swagger.v3.oas.annotations.parameters.RequestBody(
           description = "",
@@ -387,6 +406,11 @@ public class UserController {
   @PutMapping("/me")
   @Permissions({"USERS_UPDATE_ME_PROFILE"})
   public UserDto updateMeProfile (
+      @Parameter(examples = {
+          @ExampleObject(
+              name = "N/A",
+              value= "{}"
+          )})
       @AuthenticatedUser UserDto authenticatedUserDto,
       @RequestBody
       @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -417,6 +441,11 @@ public class UserController {
   @Permissions({"USERS_CHANGE_ME_PASSWORD"})
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   public void changeMePassword (
+      @Parameter(examples = {
+          @ExampleObject(
+              name = "N/A",
+              value= "{}"
+          )})
       @AuthenticatedUser UserDto authenticatedUserDto,
       @RequestBody
       @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -449,6 +478,11 @@ public class UserController {
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   public void changeUserPassword(
       @PathVariable("userId") Long userId,
+      @Parameter(examples = {
+          @ExampleObject(
+              name = "N/A",
+              value= "{}"
+          )})
       @AuthenticatedUser UserDto authenticatedUserDto,
       @RequestBody
       @io.swagger.v3.oas.annotations.parameters.RequestBody(
